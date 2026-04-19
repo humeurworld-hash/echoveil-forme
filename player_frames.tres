@@ -1,0 +1,116 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://dgco3rqfqmgyb"]
+
+[ext_resource type="Texture2D" uid="uid://deg6vm1i5rfo3" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-5.png" id="1_f5"]
+[ext_resource type="Texture2D" uid="uid://cswqgse1svi41" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-6.png" id="2_f6"]
+[ext_resource type="Texture2D" uid="uid://cg226be43u8vs" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-7.png" id="3_f7"]
+[ext_resource type="Texture2D" uid="uid://bmt6hcowcokvb" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-8.png" id="4_f8"]
+[ext_resource type="Texture2D" uid="uid://dvbbsgbekal52" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-9.png" id="5_f9"]
+[ext_resource type="Texture2D" uid="uid://lbtcp601qob4" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-10.png" id="6_f10"]
+[ext_resource type="Texture2D" uid="uid://dq841qdm68m34" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-11.png" id="7_f11"]
+[ext_resource type="Texture2D" uid="uid://g7khbknpghid" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-12.png" id="8_f12"]
+[ext_resource type="Texture2D" uid="uid://cd5kducbwdhhm" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-13.png" id="9_f13"]
+[ext_resource type="Texture2D" uid="uid://bnrwk54m3jm75" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-14.png" id="10_f14"]
+[ext_resource type="Texture2D" uid="uid://dyw8ed362ixg7" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-15.png" id="11_f15"]
+[ext_resource type="Texture2D" uid="uid://cxl03dcdvyp25" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-16.png" id="12_f16"]
+
+[sub_resource type="AtlasTexture" id="AT_idle0"]
+atlas = ExtResource("11_f15")
+region = Rect2(416, 112, 220, 210)
+
+[sub_resource type="AtlasTexture" id="AT_idle1"]
+atlas = ExtResource("12_f16")
+region = Rect2(235, 112, 220, 210)
+
+[sub_resource type="AtlasTexture" id="AT_run0"]
+atlas = ExtResource("1_f5")
+region = Rect2(1181, 334, 220, 210)
+
+[sub_resource type="AtlasTexture" id="AT_run1"]
+atlas = ExtResource("2_f6")
+region = Rect2(967, 334, 220, 210)
+
+[sub_resource type="AtlasTexture" id="AT_run2"]
+atlas = ExtResource("3_f7")
+region = Rect2(794, 334, 220, 210)
+
+[sub_resource type="AtlasTexture" id="AT_run3"]
+atlas = ExtResource("4_f8")
+region = Rect2(589, 335, 220, 210)
+
+[sub_resource type="AtlasTexture" id="AT_run4"]
+atlas = ExtResource("5_f9")
+region = Rect2(404, 335, 220, 210)
+
+[sub_resource type="AtlasTexture" id="AT_run5"]
+atlas = ExtResource("6_f10")
+region = Rect2(230, 335, 220, 210)
+
+[sub_resource type="AtlasTexture" id="AT_run6"]
+atlas = ExtResource("7_f11")
+region = Rect2(1195, 111, 220, 210)
+
+[sub_resource type="AtlasTexture" id="AT_run7"]
+atlas = ExtResource("8_f12")
+region = Rect2(994, 111, 220, 210)
+
+[sub_resource type="AtlasTexture" id="AT_run8"]
+atlas = ExtResource("9_f13")
+region = Rect2(807, 112, 220, 210)
+
+[sub_resource type="AtlasTexture" id="AT_swing0"]
+atlas = ExtResource("10_f14")
+region = Rect2(617, 112, 220, 210)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AT_idle0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AT_idle1")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AT_run0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AT_run1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AT_run2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AT_run3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AT_run4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AT_run5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AT_run6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AT_run7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AT_run8")
+}],
+"loop": true,
+"name": &"run",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AT_swing0")
+}],
+"loop": false,
+"name": &"swing",
+"speed": 8.0
+}]
