@@ -43,12 +43,12 @@ func _fire_bolt(target_pos: Vector2) -> void:
 		return
 	var bolt := bolt_scene.instantiate()
 	# Spawn in front of the guard, not at its center, to avoid overlap with player
-	var spawn_offset := Vector2(40.0 * (1.0 if target_pos.x > global_position.x else -1.0), -44)
+	var spawn_offset := Vector2(60.0 * (1.0 if target_pos.x > global_position.x else -1.0), -88)
 	bolt.global_position = global_position + spawn_offset
 	get_parent().add_child(bolt)
 	bolt.launch(target_pos)
 	sprite.play(&"attack")
-	sprite.flip_h = target_pos.x < global_position.x
+	sprite.flip_h = target_pos.x > global_position.x
 	await get_tree().create_timer(0.5).timeout
 	# Guard may have been freed during the wait
 	if not is_instance_valid(self) or _dead:
@@ -71,7 +71,7 @@ func _physics_process(delta: float) -> void:
 		if abs(position.x - _start_x) >= PATROL_RANGE or is_on_wall():
 			_dir *= -1.0
 		velocity.x = WALK_SPEED * _dir
-		sprite.flip_h = _dir < 0
+		sprite.flip_h = _dir > 0
 
 	move_and_slide()
 
