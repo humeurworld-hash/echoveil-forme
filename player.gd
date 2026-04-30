@@ -43,6 +43,7 @@ var lives: int:
 
 func _ready() -> void:
 	add_to_group("player")
+	TransitionLayer.fade_in(0.4)
 
 	swing_sound.stream = load("res://echoveil/music/animations/axe swing.mp3")
 	swing_sound.volume_db = -15.0
@@ -240,12 +241,13 @@ func swing_pickaxe() -> void:
 	fuse_sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
 	fuse_sprite.play(&"react")
 
-	var hit_pos = global_position + Vector2(PICKAXE_RANGE * swing_dir, 227)
+	var hit_pos = global_position + Vector2(PICKAXE_RANGE * swing_dir, 22)
 
 	var space = get_world_2d().direct_space_state
 	var query = PhysicsPointQueryParameters2D.new()
 	query.position = hit_pos
 	query.collision_mask = 2
+	query.collide_with_bodies = true
 	query.collide_with_areas = true
 	var results = space.intersect_point(query)
 
