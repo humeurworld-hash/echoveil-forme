@@ -45,7 +45,7 @@ func _ready() -> void:
 	_spacer(vbox, 58)
 
 	# ── NEW GAME ──────────────────────────────────────────────────────────
-	var new_btn := _make_button("NEW GAME", Color(0.91, 0.79, 0.30, 1))
+	var new_btn := _make_button("BEGIN SHIFT", Color(0.91, 0.79, 0.30, 1))
 	new_btn.pressed.connect(_on_new_game)
 	vbox.add_child(new_btn)
 
@@ -53,7 +53,7 @@ func _ready() -> void:
 
 	# ── CONTINUE ─────────────────────────────────────────────────────────
 	var has_save := FileAccess.file_exists("user://echoveil_save.json")
-	var con_btn  := _make_button("CONTINUE", Color(0.72, 0.62, 0.88, 1))
+	var con_btn  := _make_button("KEEP MOVING", Color(0.72, 0.62, 0.88, 1))
 	con_btn.disabled = not has_save
 	con_btn.modulate.a = 1.0 if has_save else 0.36
 	con_btn.pressed.connect(_on_continue)

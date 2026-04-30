@@ -208,10 +208,9 @@ func _die() -> void:
 			0.4
 		)
 	else:
-		GameState.reset()
 		await get_tree().create_timer(1.8).timeout
 		TransitionLayer.fade_out(
-			func(): get_tree().call_deferred("change_scene_to_file", "res://main_menu.tscn"),
+			func(): get_tree().call_deferred("change_scene_to_file", "res://game_over.tscn"),
 			0.5
 		)
 

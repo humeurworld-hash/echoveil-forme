@@ -126,6 +126,6 @@ func _finish() -> void:
 		return
 	_done = true
 	TransitionLayer.fade_out(
-		func(): get_tree().call_deferred("change_scene_to_file", "res://level1.tscn"),
+		func(): get_tree().call_deferred("change_scene_to_file", "res://shift_protocol.tscn"),
 		0.9
 	)
