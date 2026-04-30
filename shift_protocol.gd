@@ -8,7 +8,7 @@ const LINES := [
 	["Break unstable rock.",                     18, 0.78, 0.68, 0.90],
 	["Collect Mourk shards.",                    18, 0.78, 0.68, 0.90],
 	["Avoid Canvas drones.",                     18, 0.78, 0.68, 0.90],
-	["Follow Fuse's signal.",                    18, 0.78, 0.68, 0.90],
+	["Every 5 Mourks — Fuse shields you.",       18, 0.25, 0.92, 1.00],
 	["",                                         10, 0.0,  0.0,  0.0 ],
 	["Find the Corepath before lockdown completes.", 18, 0.91, 0.79, 0.30],
 ]

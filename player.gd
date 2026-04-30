@@ -22,6 +22,11 @@ var hit_state: int = 0
 var hit_cooldown: float = 0.0
 var stun_move_penalty: float = 0.0
 
+# Fuse shield — activates every 5 Mourks collected
+var fuse_shield := false
+var _shield_pulse := 0.0
+var _next_shield_at := 5
+
 @onready var body_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var fuse_sprite: AnimatedSprite2D = $FuseSprite
 @onready var camera: Camera2D = $Camera2D
@@ -61,7 +66,7 @@ func _ready() -> void:
 	fuse_sprite.play(&"blank")
 	fuse_sprite.modulate = Color(0.6, 0.6, 0.6, 1.0)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if is_dead:
 		return
 	var time = Time.get_ticks_msec() / 1000.0
@@ -69,6 +74,25 @@ func _process(_delta: float) -> void:
 	fuse_sprite.position.y = -55 + sin(time * 2.5) * 8
 	fuse_sprite.position.x = -50 if facing_right else 50
 	fuse_sprite.flip_h = not facing_right
+
+	# Shield charge check — every 5 Mourks earns a fresh shield
+	if not fuse_shield and shards_collected >= _next_shield_at:
+		_next_shield_at += 5
+		_activate_shield()
+
+	# Pulse the shield ring
+	if fuse_shield:
+		_shield_pulse += delta * 3.2
+		queue_redraw()
+
+func _draw() -> void:
+	if not fuse_shield:
+		return
+	var a := 0.22 + sin(_shield_pulse) * 0.12
+	var center := Vector2(-62, 10)
+	draw_circle(center, 70, Color(0.18, 0.82, 1.0, a * 0.55))
+	draw_arc(center, 70, 0, TAU, 40, Color(0.35, 1.0, 1.0, a + 0.18), 3.0)
+	draw_arc(center, 62, 0, TAU, 40, Color(0.55, 1.0, 1.0, a * 0.7), 1.5)
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
@@ -140,6 +164,11 @@ func _physics_process(delta: float) -> void:
 
 func hit_by_drone() -> void:
 	if hit_cooldown > 0 or is_dead:
+		return
+
+	# Fuse shield absorbs the hit
+	if fuse_shield:
+		_break_shield()
 		return
 
 	if hit_state == 0:
@@ -264,6 +293,31 @@ func swing_pickaxe() -> void:
 	fuse_sprite.modulate = Color(0.6, 0.6, 0.6, 1.0)
 	var resume = &"run" if abs(velocity.x) > 10 else &"idle"
 	body_sprite.play(resume)
+
+func _activate_shield() -> void:
+	fuse_shield = true
+	_shield_pulse = 0.0
+	queue_redraw()
+	fuse_sprite.modulate = Color(0.25, 0.92, 1.0, 1.0)
+	fuse_sprite.play(&"react")
+	_screen_flash(Color(0.18, 0.82, 1.0, 0.22))
+	await get_tree().create_timer(0.45).timeout
+	if not is_dead and fuse_shield:
+		fuse_sprite.play(&"blank")
+		fuse_sprite.modulate = Color(0.25, 0.92, 1.0, 1.0)   # stay cyan while shielded
+
+func _break_shield() -> void:
+	fuse_shield = false
+	hit_cooldown = 0.7
+	queue_redraw()
+	shake_camera(3.5, 0.2)
+	_screen_flash(Color(0.18, 0.82, 1.0, 0.45))
+	fuse_sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
+	fuse_sprite.play(&"react")
+	await get_tree().create_timer(0.5).timeout
+	if not is_dead:
+		fuse_sprite.play(&"blank")
+		fuse_sprite.modulate = Color(0.6, 0.6, 0.6, 1.0)
 
 func _lightning_strike() -> void:
 	can_break = false
