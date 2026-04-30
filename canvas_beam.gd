@@ -98,7 +98,6 @@ func _end_fire() -> void:
 func _show_beam_sprite() -> void:
 	if not _beam_sprite.texture:
 		return
-	var tw := get_viewport().get_width()  # doesn't matter — use level_span
 	_beam_sprite.scale.x = level_span / _beam_sprite.texture.get_width()
 	_beam_sprite.scale.y = (beam_half_h * 2.0) / _beam_sprite.texture.get_height()
 	_beam_sprite.modulate = Color(1.0, 1.0, 1.0, 0.0)
