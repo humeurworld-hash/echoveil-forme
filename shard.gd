@@ -1,12 +1,35 @@
 extends Area2D
 
+enum ShardType { TEAL, GREEN, ORANGE, PURPLE, GOLD }
+
+@export var shard_type: ShardType = ShardType.TEAL
+
+const SHARD_DATA := {
+	ShardType.TEAL:   {"tint": Color(0.30, 0.90, 0.85, 1.0), "tex": "res://echoveil/shards/shard_teal.png"},
+	ShardType.GREEN:  {"tint": Color(0.40, 1.00, 0.55, 1.0), "tex": "res://echoveil/shards/shard_green.png"},
+	ShardType.ORANGE: {"tint": Color(1.00, 0.60, 0.15, 1.0), "tex": "res://echoveil/shards/shard_orange.png"},
+	ShardType.PURPLE: {"tint": Color(0.80, 0.35, 1.00, 1.0), "tex": "res://echoveil/shards/shard_purple.png"},
+	ShardType.GOLD:   {"tint": Color(1.00, 0.85, 0.15, 1.0), "tex": "res://echoveil/shards/shard_gold.png"},
+}
+
 var bob_offset: float = 0.0
 var start_y: float = 0.0
 
 func _ready() -> void:
 	start_y = position.y
 	bob_offset = randf() * TAU
+	_apply_color()
 	body_entered.connect(_on_body_entered)
+
+func _apply_color() -> void:
+	var data := SHARD_DATA[shard_type]
+	var spr := $Sprite2D
+	var tex_path: String = data["tex"]
+	if ResourceLoader.exists(tex_path):
+		spr.texture = load(tex_path)
+		spr.modulate = Color(1, 1, 1, 1)
+	else:
+		spr.modulate = data["tint"]
 
 func _process(delta: float) -> void:
 	bob_offset += delta * 3.0
@@ -14,42 +37,65 @@ func _process(delta: float) -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
-		_fly_to_counter()
+		_collect(body)
 
-func _fly_to_counter() -> void:
-	var screen_pos = get_viewport().get_canvas_transform() * global_position
-	var texture = $Sprite2D.texture
-	var parent = get_parent()
+func _collect(player: Node2D) -> void:
+	var screen_pos := get_viewport().get_canvas_transform() * global_position
+	var tex := $Sprite2D.texture
+	var col: Color = SHARD_DATA[shard_type]["tint"]
+	var parent := get_parent()
 
-	var collect_sound = AudioStreamPlayer.new()
-	collect_sound.stream = load("res://echoveil/music/animations/shard revel.mp3")
-	parent.add_child(collect_sound)
-	collect_sound.play()
-	collect_sound.finished.connect(collect_sound.queue_free)
+	var sound := AudioStreamPlayer.new()
+	sound.stream = load("res://echoveil/music/animations/shard revel.mp3")
+	parent.add_child(sound)
+	sound.play()
+	sound.finished.connect(sound.queue_free)
 
 	queue_free()
 
-	var anim_layer = CanvasLayer.new()
+	var anim_layer := CanvasLayer.new()
 	anim_layer.layer = 20
 	parent.add_child(anim_layer)
 
-	var sprite = Sprite2D.new()
-	sprite.texture = texture
+	var sprite := Sprite2D.new()
+	sprite.texture = tex
+	sprite.modulate = col
 	sprite.scale = Vector2(0.035, 0.035)
 	sprite.position = screen_pos
 	anim_layer.add_child(sprite)
 
-	var target = Vector2(31, 26)
-
-	var tween = anim_layer.create_tween()
+	var tween := anim_layer.create_tween()
 	tween.set_parallel(true)
 	tween.tween_property(sprite, "scale", Vector2(0.055, 0.055), 0.08)
 	tween.chain().set_parallel(true)
-	tween.tween_property(sprite, "position", target, 0.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	tween.tween_property(sprite, "scale", Vector2(0.008, 0.008), 0.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.tween_property(sprite, "position", Vector2(31, 26), 0.3) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.tween_property(sprite, "scale", Vector2(0.008, 0.008), 0.3) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	tween.chain().tween_callback(func():
-		GameState.shards_collected += 1
-		if GameState.shards_collected % 25 == 0 and GameState.health < 3:
-			GameState.health = min(3, GameState.health + 1)
+		_apply_ability(player)
 		anim_layer.queue_free()
 	)
+
+func _apply_ability(player: Node2D) -> void:
+	GameState.shards_collected += 1
+	match shard_type:
+		ShardType.TEAL:
+			pass
+		ShardType.GREEN:
+			# Heals one health shard
+			if GameState.health < 3:
+				GameState.health = min(3, GameState.health + 1)
+		ShardType.ORANGE:
+			# Speed boost for 3.5 seconds
+			if player.has_method("boost_speed"):
+				player.boost_speed(3.5)
+		ShardType.PURPLE:
+			# Counts as 3 extra toward Fuse shield threshold
+			if player.has_method("add_shield_progress"):
+				player.add_shield_progress(3)
+		ShardType.GOLD:
+			# Full heal + instant shield
+			GameState.health = 3
+			if player.has_method("force_shield"):
+				player.force_shield()

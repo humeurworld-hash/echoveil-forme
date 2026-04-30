@@ -27,6 +27,9 @@ var fuse_shield := false
 var _shield_pulse := 0.0
 var _next_shield_at := 5
 
+# Orange mourk speed boost
+var _speed_boost_timer := 0.0
+
 @onready var body_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var fuse_sprite: AnimatedSprite2D = $FuseSprite
 @onready var camera: Camera2D = $Camera2D
@@ -137,7 +140,11 @@ func _physics_process(delta: float) -> void:
 	if on_floor:
 		is_jumping = false
 
-	var move_speed = SPEED * (0.45 if stun_move_penalty > 0 else 1.0)
+	if _speed_boost_timer > 0:
+		_speed_boost_timer -= delta
+
+	var boost_mult := 1.65 if _speed_boost_timer > 0 else 1.0
+	var move_speed = SPEED * boost_mult * (0.45 if stun_move_penalty > 0 else 1.0)
 	var direction := Input.get_axis("move_left", "move_right")
 	if direction:
 		velocity.x = direction * move_speed
@@ -293,6 +300,22 @@ func swing_pickaxe() -> void:
 	fuse_sprite.modulate = Color(0.6, 0.6, 0.6, 1.0)
 	var resume = &"run" if abs(velocity.x) > 10 else &"idle"
 	body_sprite.play(resume)
+
+# ── Mourk ability hooks called by shard.gd ────────────────────────────────────
+func boost_speed(duration: float) -> void:
+	_speed_boost_timer = duration
+	# Orange glow
+	var tw := create_tween()
+	tw.tween_property(body_sprite, "modulate", Color(1.4, 0.65, 0.15, 1.0), 0.08)
+	tw.tween_property(body_sprite, "modulate", Color(1.0, 1.0, 1.0, 1.0), duration - 0.1)
+
+func add_shield_progress(extra: int) -> void:
+	_next_shield_at = max(shards_collected + 1, _next_shield_at - extra)
+
+func force_shield() -> void:
+	if not fuse_shield:
+		_next_shield_at = shards_collected + 999  # prevent double-trigger
+		_activate_shield()
 
 func _activate_shield() -> void:
 	fuse_shield = true

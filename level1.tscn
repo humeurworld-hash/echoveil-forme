@@ -14,12 +14,13 @@
 [ext_resource type="Texture2D" uid="uid://5h85q5nijjse" path="res://echoveil/UI/Life shards/220E297F-BA40-4195-9E91-D295DD553BA9-1.png" id="10_ls"]
 [ext_resource type="PackedScene" path="res://touch_controls.tscn" id="11_touch"]
 [ext_resource type="Texture2D" uid="uid://dsl4xo7l1hlh3" path="res://echoveil/platforms/Background_far layer.PNG" id="13_bg"]
-[ext_resource type="Texture2D" uid="uid://djo8ohk2ayp4g" path="res://echoveil/platforms/Fog layer.PNG" id="16_fog"]
 [ext_resource type="Texture2D" uid="uid://dfo6gvdmoemta" path="res://echoveil/platforms/Ledge two.png" id="17_ledge2"]
 [ext_resource type="Texture2D" uid="uid://dggeirass816s" path="res://echoveil/platforms/Ledge three.png" id="18_ledge3"]
 [ext_resource type="Texture2D" uid="uid://btmstgmf1oads" path="res://echoveil/platforms/Ledge.png" id="19_ledge1"]
 [ext_resource type="PackedScene" path="res://rock.tscn" id="20_rock"]
 [ext_resource type="PackedScene" path="res://level_exit.tscn" id="21_exit"]
+[ext_resource type="PackedScene" path="res://curation_guard.tscn" id="22_guard"]
+[ext_resource type="PackedScene" path="res://canvas_suppressor.tscn" id="23_sup"]
 
 [sub_resource type="RectangleShape2D" id="s_ground"]
 size = Vector2(3000, 32)
@@ -29,6 +30,9 @@ size = Vector2(20, 800)
 
 [sub_resource type="RectangleShape2D" id="s_wall_r"]
 size = Vector2(20, 800)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_nauge"]
+load_path = "res://.godot/imported/Fog layer.PNG-ee5e69753990b55c9f29c26b2c56bfe7.ctex"
 
 [sub_resource type="RectangleShape2D" id="s_plat1"]
 size = Vector2(191, 20)
@@ -108,7 +112,7 @@ modulate = Color(1, 1, 1, 0.72)
 z_index = 1
 position = Vector2(1000, 270.93)
 scale = Vector2(0.518, 1.1165401)
-texture = ExtResource("16_fog")
+texture = SubResource("CompressedTexture2D_nauge")
 
 [node name="Platform1" type="StaticBody2D" parent="." unique_id=1654967156]
 position = Vector2(400, 520)
@@ -227,21 +231,25 @@ position = Vector2(380, 633)
 
 [node name="Shard3" parent="." unique_id=1534389029 instance=ExtResource("6_shard")]
 position = Vector2(437, 497)
+shard_type = 1
 
 [node name="Shard4" parent="." unique_id=492942105 instance=ExtResource("6_shard")]
 position = Vector2(701, 398)
 
 [node name="Shard5" parent="." unique_id=2119158844 instance=ExtResource("6_shard")]
 position = Vector2(760, 395)
+shard_type = 2
 
 [node name="Shard6" parent="." unique_id=1479138252 instance=ExtResource("6_shard")]
 position = Vector2(981, 317)
 
 [node name="Shard7" parent="." unique_id=2056878147 instance=ExtResource("6_shard")]
 position = Vector2(1255, 439)
+shard_type = 3
 
 [node name="Shard8" parent="." unique_id=193639214 instance=ExtResource("6_shard")]
 position = Vector2(1650, 348)
+shard_type = 4
 
 [node name="Rock1" parent="." unique_id=50156717 instance=ExtResource("20_rock")]
 position = Vector2(580, 610)
@@ -254,6 +262,16 @@ position = Vector2(430, 470)
 
 [node name="Rock4" parent="." unique_id=1259694235 instance=ExtResource("20_rock")]
 position = Vector2(1150, 610)
+
+[node name="Guard1" parent="." unique_id=2201000001 instance=ExtResource("22_guard")]
+position = Vector2(640, 652)
+
+[node name="Guard2" parent="." unique_id=2201000002 instance=ExtResource("22_guard")]
+position = Vector2(1100, 652)
+drop_color = 1
+
+[node name="Suppressor1" parent="." unique_id=2301000001 instance=ExtResource("23_sup")]
+position = Vector2(980, 200)
 
 [node name="LevelExit" parent="." unique_id=1867320001 instance=ExtResource("21_exit")]
 position = Vector2(1955, 552)

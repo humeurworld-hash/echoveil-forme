@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://level2echoveil"]
+[gd_scene format=3 uid="uid://dys6tv51wah0f"]
 
 [ext_resource type="Script" uid="uid://2amuy46p2t3q" path="res://player.gd" id="1_player"]
 [ext_resource type="Texture2D" uid="uid://c2j7t6f25unu6" path="res://echoveil/platforms/ground_stone 2.PNG" id="2_hx44q"]
@@ -21,6 +21,8 @@
 [ext_resource type="PackedScene" path="res://rock.tscn" id="20_rock"]
 [ext_resource type="PackedScene" path="res://level_exit.tscn" id="21_exit"]
 [ext_resource type="PackedScene" path="res://canvas_beam.tscn" id="22_beam"]
+[ext_resource type="PackedScene" path="res://curation_guard.tscn" id="23_guard"]
+[ext_resource type="PackedScene" path="res://canvas_suppressor.tscn" id="24_sup"]
 
 [sub_resource type="RectangleShape2D" id="s_ground"]
 size = Vector2(3000, 32)
@@ -233,6 +235,7 @@ position = Vector2(480, 478)
 
 [node name="Shard4" parent="." unique_id=1372864414 instance=ExtResource("6_shard")]
 position = Vector2(700, 368)
+shard_type = 1
 
 [node name="Shard5" parent="." unique_id=1372864415 instance=ExtResource("6_shard")]
 position = Vector2(775, 368)
@@ -242,15 +245,18 @@ position = Vector2(1050, 468)
 
 [node name="Shard7" parent="." unique_id=1372864417 instance=ExtResource("6_shard")]
 position = Vector2(1320, 338)
+shard_type = 2
 
 [node name="Shard8" parent="." unique_id=1372864418 instance=ExtResource("6_shard")]
 position = Vector2(1390, 338)
 
 [node name="Shard9" parent="." unique_id=1372864419 instance=ExtResource("6_shard")]
 position = Vector2(1640, 418)
+shard_type = 3
 
 [node name="Shard10" parent="." unique_id=1372864420 instance=ExtResource("6_shard")]
 position = Vector2(1860, 632)
+shard_type = 4
 
 [node name="Rock1" parent="." unique_id=150256717 instance=ExtResource("20_rock")]
 position = Vector2(310, 610)
@@ -263,6 +269,20 @@ position = Vector2(1130, 610)
 
 [node name="Rock4" parent="." unique_id=1359794235 instance=ExtResource("20_rock")]
 position = Vector2(1490, 610)
+
+[node name="Guard1" parent="." unique_id=2301000003 instance=ExtResource("23_guard")]
+position = Vector2(500, 652)
+drop_color = 2
+
+[node name="Guard2" parent="." unique_id=2301000004 instance=ExtResource("23_guard")]
+position = Vector2(1200, 652)
+drop_color = 3
+
+[node name="Suppressor1" parent="." unique_id=2401000001 instance=ExtResource("24_sup")]
+position = Vector2(700, 180)
+
+[node name="Suppressor2" parent="." unique_id=2401000002 instance=ExtResource("24_sup")]
+position = Vector2(1500, 180)
 
 [node name="LevelExit" parent="." unique_id=1967320001 instance=ExtResource("21_exit")]
 position = Vector2(1955, 552)
