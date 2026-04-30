@@ -146,16 +146,22 @@ func _ready() -> void:
 	bot_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bot_bar)
 
-	# ── 6. Skip hint ──────────────────────────────────────────────────────────
-	var hint := Label.new()
-	hint.text = "— press any key to skip —"
-	hint.add_theme_font_size_override("font_size", 11)
-	hint.add_theme_color_override("font_color", Color(0.44, 0.34, 0.54, 0.68))
-	hint.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	hint.offset_top = -30.0
-	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(hint)
+	# ── 6. SKIP button (touch-friendly, bottom-right) ────────────────────────
+	var skip_btn := Button.new()
+	skip_btn.text = "SKIP  ›"
+	skip_btn.add_theme_font_size_override("font_size", 16)
+	skip_btn.add_theme_color_override("font_color", Color(0.55, 0.42, 0.70, 0.85))
+	skip_btn.custom_minimum_size = Vector2(130, 56)
+	skip_btn.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	skip_btn.offset_left   = -148.0
+	skip_btn.offset_top    = -72.0
+	skip_btn.offset_right  = -18.0
+	skip_btn.offset_bottom = -16.0
+	skip_btn.pressed.connect(func():
+		if _tween: _tween.kill()
+		_finish()
+	)
+	add_child(skip_btn)
 
 	TransitionLayer.fade_in(1.6)
 
