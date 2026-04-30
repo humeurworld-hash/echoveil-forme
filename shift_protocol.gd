@@ -50,7 +50,7 @@ func _ready() -> void:
 	# BEGIN button — hidden until lines finish revealing
 	var begin_btn := Button.new()
 	begin_btn.text = "ENTER THE MINE  ›"
-	begin_btn.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	begin_btn.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	begin_btn.add_theme_font_size_override("font_size", 20)
 	begin_btn.add_theme_color_override("font_color", Color(0.91, 0.79, 0.30, 1.0))
 	begin_btn.custom_minimum_size = Vector2(300, 62)
