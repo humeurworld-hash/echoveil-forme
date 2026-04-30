@@ -1,7 +1,36 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://curation_guard.gd" id="1_guard"]
-[ext_resource type="SpriteFrames" path="res://curation_guard_frames.tres" id="2_frames"]
+[ext_resource type="Texture2D" path="res://echoveil/Canvas/drones/Curation Guard/Curation Guard idle.PNG" id="2_walk"]
+[ext_resource type="Texture2D" path="res://echoveil/Canvas/drones/Curation Guard/Curation Guard alert .PNG" id="3_stun"]
+[ext_resource type="Texture2D" path="res://echoveil/Canvas/drones/Curation Guard/Curation Guard attack right.PNG" id="4_atk"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_guard"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_walk")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_stun")
+}],
+"loop": false,
+"name": &"stun",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_atk")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_guard"]
 size = Vector2(32, 88)
@@ -13,8 +42,8 @@ script = ExtResource("1_guard")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -44)
-scale = Vector2(0.25, 0.25)
-sprite_frames = ExtResource("2_frames")
+scale = Vector2(0.05, 0.05)
+sprite_frames = SubResource("SpriteFrames_guard")
 animation = &"walk"
 autoplay = "walk"
 

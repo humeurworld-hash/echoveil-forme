@@ -1,7 +1,27 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://canvas_suppressor.gd" id="1_sup"]
-[ext_resource type="SpriteFrames" path="res://canvas_suppressor_frames.tres" id="2_frames"]
+[ext_resource type="Texture2D" path="res://echoveil/Canvas/drones/Canvas Suppressor/Canvas Suppressor idle.PNG" id="2_hover"]
+[ext_resource type="Texture2D" path="res://echoveil/Canvas/drones/Canvas Suppressor/Canvas Suppressor alert.PNG" id="3_warn"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sup"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_hover")
+}],
+"loop": true,
+"name": &"hover",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_warn")
+}],
+"loop": true,
+"name": &"warn",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sup"]
 size = Vector2(56, 56)
@@ -14,8 +34,8 @@ script = ExtResource("1_sup")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 0)
-scale = Vector2(0.25, 0.25)
-sprite_frames = ExtResource("2_frames")
+scale = Vector2(0.05, 0.05)
+sprite_frames = SubResource("SpriteFrames_sup")
 animation = &"hover"
 autoplay = "hover"
 
