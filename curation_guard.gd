@@ -1,8 +1,10 @@
 extends CharacterBody2D
 
-const WALK_SPEED   := 85.0
-const GRAVITY      := 980.0
-const PATROL_RANGE := 160.0
+const WALK_SPEED    := 85.0
+const GRAVITY       := 980.0
+const PATROL_RANGE  := 160.0
+const FIRE_RANGE    := 420.0
+const FIRE_COOLDOWN := 3.5
 
 @export var drop_color: int = 2  # 0=TEAL 1=GREEN 2=ORANGE 3=PURPLE 4=GOLD
 
@@ -14,12 +16,38 @@ var _start_x    := 0.0
 var _stunned    := false
 var _stun_timer := 0.0
 var _dead       := false
+var _fire_timer := 1.5
 
 func _ready() -> void:
 	add_to_group("enemy")
 	_start_x = position.x
 	_dir = 1.0 if randf() > 0.5 else -1.0
 	sprite.play(&"walk")
+
+func _process(delta: float) -> void:
+	if _dead or _stunned:
+		return
+	_fire_timer -= delta
+	if _fire_timer <= 0.0:
+		var player := get_tree().get_first_node_in_group("player") as Node2D
+		if player and is_instance_valid(player):
+			if abs(player.global_position.x - global_position.x) < FIRE_RANGE:
+				_fire_bolt(player.global_position)
+		_fire_timer = FIRE_COOLDOWN
+
+func _fire_bolt(target_pos: Vector2) -> void:
+	var bolt_scene := load("res://laser_bolt.tscn") as PackedScene
+	if not bolt_scene:
+		return
+	var bolt := bolt_scene.instantiate()
+	bolt.global_position = global_position + Vector2(0, -44)
+	get_parent().add_child(bolt)
+	bolt.launch(target_pos)
+	sprite.play(&"attack")
+	sprite.flip_h = target_pos.x < global_position.x
+	await get_tree().create_timer(0.5).timeout
+	if not _dead and not _stunned:
+		sprite.play(&"walk")
 
 func _physics_process(delta: float) -> void:
 	if _dead:

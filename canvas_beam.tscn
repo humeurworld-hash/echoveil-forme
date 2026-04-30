@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://canvas_beam.gd" id="1_beam"]
+[ext_resource type="Texture2D" path="res://echoveil/Animations/laser beam.PNG" id="2_beamtex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_beam"]
 size = Vector2(2000, 80)
@@ -10,6 +11,10 @@ collision_layer = 2
 collision_mask = 1
 monitoring = true
 script = ExtResource("1_beam")
+
+[node name="BeamSprite" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("2_beamtex")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_beam")

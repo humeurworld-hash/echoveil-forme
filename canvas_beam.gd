@@ -19,7 +19,8 @@ var _pulse : float = 0.0        # drives warning animation
 var _warn_snd : AudioStreamPlayer
 var _fire_snd : AudioStreamPlayer
 
-@onready var _shape : CollisionShape2D = $CollisionShape2D
+@onready var _shape       : CollisionShape2D = $CollisionShape2D
+@onready var _beam_sprite : Sprite2D         = $BeamSprite
 
 func _ready() -> void:
 	add_to_group("beam")
@@ -56,35 +57,19 @@ func _process(delta: float) -> void:
 			queue_redraw()
 
 func _draw() -> void:
+	if _state != State.WARN:
+		return
 	var hw := level_span * 0.5
-	match _state:
-		State.WARN:
-			var a := 0.22 + sin(_pulse) * 0.22
-			# Warning line across full width
-			draw_line(Vector2(-hw, 0), Vector2(hw, 0),
-				Color(1.0, 0.20, 0.05, a + 0.12), 4.0)
-			# Left-pointing chevrons — show beam will travel right→left
-			var step := level_span / 10.0
-			for i in range(10):
-				var cx := hw - step * 0.5 - step * float(i)
-				draw_line(Vector2(cx + 14, -8), Vector2(cx, 0),
-					Color(1.0, 0.35, 0.10, a * 0.85), 2.0)
-				draw_line(Vector2(cx + 14,  8), Vector2(cx, 0),
-					Color(1.0, 0.35, 0.10, a * 0.85), 2.0)
-
-		State.FIRE:
-			var progress := 1.0 - (_timer / fire_duration)
-			# Fade out in the final 25 % of fire duration
-			var a := clampf(1.0 - maxf(0.0, (progress - 0.75) * 4.0), 0.0, 1.0)
-			# Outer glow
-			draw_rect(Rect2(-hw, -(beam_half_h + 14), level_span, (beam_half_h + 14) * 2),
-				Color(1.0, 0.08, 0.03, 0.22 * a))
-			# Main beam body
-			draw_rect(Rect2(-hw, -beam_half_h, level_span, beam_half_h * 2),
-				Color(1.0, 0.12, 0.05, 0.80 * a))
-			# Bright white-orange core
-			draw_rect(Rect2(-hw, -10, level_span, 20),
-				Color(1.0, 0.62, 0.45, 0.95 * a))
+	var a := 0.22 + sin(_pulse) * 0.22
+	draw_line(Vector2(-hw, 0), Vector2(hw, 0),
+		Color(1.0, 0.20, 0.05, a + 0.12), 4.0)
+	var step := level_span / 10.0
+	for i in range(10):
+		var cx := hw - step * 0.5 - step * float(i)
+		draw_line(Vector2(cx + 14, -8), Vector2(cx, 0),
+			Color(1.0, 0.35, 0.10, a * 0.85), 2.0)
+		draw_line(Vector2(cx + 14,  8), Vector2(cx, 0),
+			Color(1.0, 0.35, 0.10, a * 0.85), 2.0)
 
 func _begin_warn() -> void:
 	_state = State.WARN
@@ -99,7 +84,7 @@ func _begin_fire() -> void:
 	_shape.disabled = false
 	_fire_snd.play()
 	queue_redraw()
-	# Hit players already inside the beam zone at the moment of fire
+	_show_beam_sprite()
 	for body in get_overlapping_bodies():
 		_try_hit(body)
 
@@ -108,6 +93,24 @@ func _end_fire() -> void:
 	_state = State.IDLE
 	_timer = cooldown
 	queue_redraw()
+	_hide_beam_sprite()
+
+func _show_beam_sprite() -> void:
+	if not _beam_sprite.texture:
+		return
+	var tw := get_viewport().get_width()  # doesn't matter — use level_span
+	_beam_sprite.scale.x = level_span / _beam_sprite.texture.get_width()
+	_beam_sprite.scale.y = (beam_half_h * 2.0) / _beam_sprite.texture.get_height()
+	_beam_sprite.modulate = Color(1.0, 1.0, 1.0, 0.0)
+	_beam_sprite.visible = true
+	var tween := create_tween().set_parallel(true)
+	tween.tween_property(_beam_sprite, "modulate", Color(1.0, 1.0, 1.0, 0.95), 0.06)
+	tween.chain().tween_property(_beam_sprite, "modulate",
+		Color(1.0, 1.0, 1.0, 0.0), fire_duration * 0.3) \
+		.set_delay(fire_duration * 0.7)
+
+func _hide_beam_sprite() -> void:
+	_beam_sprite.visible = false
 
 func _on_body_entered(body: Node2D) -> void:
 	# Catches players who run/jump INTO the beam while it's firing

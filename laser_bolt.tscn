@@ -1,0 +1,21 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://laser_bolt.gd" id="1_bolt"]
+[ext_resource type="Texture2D" path="res://echoveil/Animations/laser contact.PNG" id="2_tex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bolt"]
+radius = 16.0
+
+[node name="LaserBolt" type="Area2D"]
+collision_layer = 2
+collision_mask = 1
+monitoring = true
+script = ExtResource("1_bolt")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation_degrees = -45.0
+scale = Vector2(0.12, 0.12)
+texture = ExtResource("2_tex")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_bolt")
