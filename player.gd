@@ -3,7 +3,7 @@ extends CharacterBody2D
 const SPEED = 300.0
 const JUMP_FORCE = -600.0
 const GRAVITY = 980.0
-const PICKAXE_RANGE = 60.0
+const PICKAXE_RANGE = 80.0
 const PICKAXE_DAMAGE = 1
 const COYOTE_TIME = 0.12
 const JUMP_BUFFER_TIME = 0.12
@@ -276,15 +276,19 @@ func swing_pickaxe() -> void:
 	fuse_sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
 	fuse_sprite.play(&"react")
 
-	var hit_pos = global_position + Vector2(PICKAXE_RANGE * swing_dir, 22)
+	# -62 is the x-offset of the player's collision shape from origin
+	var hit_pos = global_position + Vector2(-62.0 + PICKAXE_RANGE * swing_dir, 22.5)
 
 	var space = get_world_2d().direct_space_state
-	var query = PhysicsPointQueryParameters2D.new()
-	query.position = hit_pos
+	var hit_shape := CircleShape2D.new()
+	hit_shape.radius = 22.0
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = hit_shape
+	query.transform = Transform2D(0.0, hit_pos)
 	query.collision_mask = 2
 	query.collide_with_bodies = true
 	query.collide_with_areas = true
-	var results = space.intersect_point(query)
+	var results = space.intersect_shape(query)
 
 	if results.size() > 0:
 		strike_sound.play()
