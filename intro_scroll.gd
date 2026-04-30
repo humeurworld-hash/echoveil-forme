@@ -117,7 +117,7 @@ func _ready() -> void:
 	var lbl_w := vp.x * 0.60
 	var lbl := Label.new()
 	lbl.text = LORE_TEXT
-	lbl.add_theme_font_size_override("font_size", 19)
+	lbl.add_theme_font_size_override("font_size", 35)
 	lbl.add_theme_color_override("font_color", Color(0.93, 0.83, 0.38, 1.0))
 	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -149,7 +149,7 @@ func _ready() -> void:
 	# ── 6. SKIP button (touch-friendly, bottom-right) ────────────────────────
 	var skip_btn := Button.new()
 	skip_btn.text = "SKIP  ›"
-	skip_btn.add_theme_font_size_override("font_size", 16)
+	skip_btn.add_theme_font_size_override("font_size", 30)
 	skip_btn.add_theme_color_override("font_color", Color(0.55, 0.42, 0.70, 0.85))
 	skip_btn.custom_minimum_size = Vector2(130, 56)
 	skip_btn.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)

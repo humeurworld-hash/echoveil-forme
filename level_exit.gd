@@ -38,7 +38,7 @@ func _show_corepath_found() -> void:
 	lbl.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	lbl.grow_vertical   = Control.GROW_DIRECTION_BOTH
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.add_theme_font_size_override("font_size", 44)
+	lbl.add_theme_font_size_override("font_size", 81)
 	lbl.add_theme_color_override("font_color", Color(0.91, 0.79, 0.30, 1.0))
 	lbl.modulate.a = 0.0
 	canvas.add_child(lbl)

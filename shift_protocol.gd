@@ -2,15 +2,15 @@ extends Control
 
 # Lines: [text, font_size, color_r, color_g, color_b]
 const LINES := [
-	["SHIFT PROTOCOL",                           30, 0.91, 0.79, 0.30],
-	["",                                         10, 0.0,  0.0,  0.0 ],
-	["Move through the mine.",                   18, 0.78, 0.68, 0.90],
-	["Break unstable rock.",                     18, 0.78, 0.68, 0.90],
-	["Collect Mourk shards.",                    18, 0.78, 0.68, 0.90],
-	["Avoid Canvas drones.",                     18, 0.78, 0.68, 0.90],
-	["Every 5 Mourks — Fuse shields you.",       18, 0.25, 0.92, 1.00],
-	["",                                         10, 0.0,  0.0,  0.0 ],
-	["Find the Corepath before lockdown completes.", 18, 0.91, 0.79, 0.30],
+	["SHIFT PROTOCOL",                           56, 0.91, 0.79, 0.30],
+	["",                                         18, 0.0,  0.0,  0.0 ],
+	["Move through the mine.",                   33, 0.78, 0.68, 0.90],
+	["Break unstable rock.",                     33, 0.78, 0.68, 0.90],
+	["Collect Mourk shards.",                    33, 0.78, 0.68, 0.90],
+	["Avoid Canvas drones.",                     33, 0.78, 0.68, 0.90],
+	["Every 5 Mourks — Fuse shields you.",       33, 0.25, 0.92, 1.00],
+	["",                                         18, 0.0,  0.0,  0.0 ],
+	["Find the Corepath before lockdown completes.", 33, 0.91, 0.79, 0.30],
 ]
 
 var _done := false
@@ -51,7 +51,7 @@ func _ready() -> void:
 	var begin_btn := Button.new()
 	begin_btn.text = "ENTER THE MINE  ›"
 	begin_btn.alignment = HORIZONTAL_ALIGNMENT_CENTER
-	begin_btn.add_theme_font_size_override("font_size", 20)
+	begin_btn.add_theme_font_size_override("font_size", 37)
 	begin_btn.add_theme_color_override("font_color", Color(0.91, 0.79, 0.30, 1.0))
 	begin_btn.custom_minimum_size = Vector2(300, 62)
 	begin_btn.modulate.a = 0.0

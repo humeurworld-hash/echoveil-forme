@@ -29,7 +29,7 @@ func _ready() -> void:
 	# ── "; FORME" sub-title (image already shows ECHOVEIL) ───────────────────
 	var sub := Label.new()
 	sub.text = "; FORME"
-	sub.add_theme_font_size_override("font_size", 38)
+	sub.add_theme_font_size_override("font_size", 70)
 	sub.add_theme_color_override("font_color", Color(0.68, 0.52, 0.95, 0.95))
 	sub.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	sub.offset_top  = vp.y * 0.155
@@ -40,7 +40,7 @@ func _ready() -> void:
 	# ── Tagline ───────────────────────────────────────────────────────────────
 	var tag := Label.new()
 	tag.text = "do not let them curate you"
-	tag.add_theme_font_size_override("font_size", 11)
+	tag.add_theme_font_size_override("font_size", 20)
 	tag.add_theme_color_override("font_color", Color(0.44, 0.34, 0.54, 0.72))
 	tag.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	tag.offset_top = vp.y * 0.215
@@ -106,7 +106,7 @@ func _ready() -> void:
 	# ── Version stamp ─────────────────────────────────────────────────────────
 	var ver := Label.new()
 	ver.text = "v0.1"
-	ver.add_theme_font_size_override("font_size", 10)
+	ver.add_theme_font_size_override("font_size", 18)
 	ver.add_theme_color_override("font_color", Color(0.3, 0.22, 0.40, 0.5))
 	ver.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	ver.offset_left = -36.0
@@ -121,7 +121,7 @@ func _make_button(label: String, col: Color) -> Button:
 	var btn := Button.new()
 	btn.text = label
 	btn.custom_minimum_size = Vector2(300, 50)
-	btn.add_theme_font_size_override("font_size", 22)
+	btn.add_theme_font_size_override("font_size", 41)
 	btn.add_theme_color_override("font_color", col)
 	return btn
 

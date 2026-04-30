@@ -18,7 +18,7 @@ func _ready() -> void:
 	var line1 := Label.new()
 	line1.text = "CURATION"
 	line1.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	line1.add_theme_font_size_override("font_size", 52)
+	line1.add_theme_font_size_override("font_size", 96)
 	line1.add_theme_color_override("font_color", Color(0.85, 0.12, 0.22, 1))
 	vbox.add_child(line1)
 
@@ -26,7 +26,7 @@ func _ready() -> void:
 	var line2 := Label.new()
 	line2.text = "COMPLETE"
 	line2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	line2.add_theme_font_size_override("font_size", 52)
+	line2.add_theme_font_size_override("font_size", 96)
 	line2.add_theme_color_override("font_color", Color(0.85, 0.12, 0.22, 1))
 	vbox.add_child(line2)
 
@@ -34,7 +34,7 @@ func _ready() -> void:
 	var sub := Label.new()
 	sub.text = "they curated you"
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	sub.add_theme_font_size_override("font_size", 13)
+	sub.add_theme_font_size_override("font_size", 24)
 	sub.add_theme_color_override("font_color", Color(0.50, 0.18, 0.28, 0.80))
 	vbox.add_child(sub)
 
@@ -42,7 +42,7 @@ func _ready() -> void:
 	var score_lbl := Label.new()
 	score_lbl.text = "mourks collected: %d" % GameState.shards_collected
 	score_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	score_lbl.add_theme_font_size_override("font_size", 15)
+	score_lbl.add_theme_font_size_override("font_size", 28)
 	score_lbl.add_theme_color_override("font_color", Color(0.60, 0.50, 0.72, 0.80))
 	vbox.add_child(score_lbl)
 
@@ -66,7 +66,7 @@ func _make_button(label: String, col: Color) -> Button:
 	var btn := Button.new()
 	btn.text = label
 	btn.custom_minimum_size = Vector2(320, 54)
-	btn.add_theme_font_size_override("font_size", 24)
+	btn.add_theme_font_size_override("font_size", 44)
 	btn.add_theme_color_override("font_color", col)
 	return btn
 

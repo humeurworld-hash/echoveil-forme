@@ -299,7 +299,7 @@ offset_top = 22.0
 offset_right = 248.0
 offset_bottom = 76.0
 theme_override_colors/font_color = Color(0.9098039, 0.7882353, 0.3019608, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 41
 text = "x 0"
 
 [node name="HealthShard1" type="TextureRect" parent="HUD" unique_id=301043831]
@@ -351,7 +351,7 @@ offset_right = -10.0
 offset_bottom = 92.0
 grow_horizontal = 0
 theme_override_colors/font_color = Color(0.9, 0.3, 1, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 37
 horizontal_alignment = 2
 
 [node name="TouchControls" parent="." unique_id=1519975432 instance=ExtResource("11_touch")]
