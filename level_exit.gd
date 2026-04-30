@@ -28,8 +28,9 @@ func _on_body_entered(body: Node2D) -> void:
 	if not body.is_in_group("player"):
 		return
 	triggered = true
-	GameState.save()
 	LevelManager.current_level += 1
+	GameState.current_level = LevelManager.current_level
+	GameState.save()
 	var next_scene := "res://level%d.tscn" % LevelManager.current_level
 	if not ResourceLoader.exists(next_scene):
 		# Level doesn't exist yet — return to main menu
