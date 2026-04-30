@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://curation_guard.gd" id="1_guard"]
+[ext_resource type="SpriteFrames" path="res://curation_guard_frames.tres" id="2_frames"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_guard"]
 size = Vector2(32, 88)
@@ -9,6 +10,13 @@ size = Vector2(32, 88)
 collision_layer = 2
 collision_mask = 1
 script = ExtResource("1_guard")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -44)
+scale = Vector2(0.25, 0.25)
+sprite_frames = ExtResource("2_frames")
+animation = &"walk"
+autoplay = "walk"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -44)
