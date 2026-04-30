@@ -97,7 +97,7 @@ func _die() -> void:
 	var shard_scene := load("res://shard.tscn") as PackedScene
 	if shard_scene:
 		var s := shard_scene.instantiate()
-		s.shard_type = drop_color
+		s.set("shard_type", drop_color)
 		s.position = global_position + Vector2(0, -30)
 		get_parent().add_child(s)
 	var tw := create_tween()

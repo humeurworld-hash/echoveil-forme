@@ -64,6 +64,8 @@ func _collect(player: Node2D) -> void:
 	sprite.position = screen_pos
 	anim_layer.add_child(sprite)
 
+	# Capture what we need before queue_free() so the lambda never touches self
+	var st := shard_type
 	var tween := anim_layer.create_tween()
 	tween.set_parallel(true)
 	tween.tween_property(sprite, "scale", Vector2(0.055, 0.055), 0.08)
@@ -73,29 +75,22 @@ func _collect(player: Node2D) -> void:
 	tween.tween_property(sprite, "scale", Vector2(0.008, 0.008), 0.3) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	tween.chain().tween_callback(func():
-		_apply_ability(player)
+		GameState.shards_collected += 1
+		match st:
+			ShardType.TEAL:
+				pass
+			ShardType.GREEN:
+				if GameState.health < 3:
+					GameState.health = min(3, GameState.health + 1)
+			ShardType.ORANGE:
+				if is_instance_valid(player) and player.has_method("boost_speed"):
+					player.boost_speed(3.5)
+			ShardType.PURPLE:
+				if is_instance_valid(player) and player.has_method("add_shield_progress"):
+					player.add_shield_progress(3)
+			ShardType.GOLD:
+				GameState.health = 3
+				if is_instance_valid(player) and player.has_method("force_shield"):
+					player.force_shield()
 		anim_layer.queue_free()
 	)
-
-func _apply_ability(player: Node2D) -> void:
-	GameState.shards_collected += 1
-	match shard_type:
-		ShardType.TEAL:
-			pass
-		ShardType.GREEN:
-			# Heals one health shard
-			if GameState.health < 3:
-				GameState.health = min(3, GameState.health + 1)
-		ShardType.ORANGE:
-			# Speed boost for 3.5 seconds
-			if player.has_method("boost_speed"):
-				player.boost_speed(3.5)
-		ShardType.PURPLE:
-			# Counts as 3 extra toward Fuse shield threshold
-			if player.has_method("add_shield_progress"):
-				player.add_shield_progress(3)
-		ShardType.GOLD:
-			# Full heal + instant shield
-			GameState.health = 3
-			if player.has_method("force_shield"):
-				player.force_shield()
