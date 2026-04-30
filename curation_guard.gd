@@ -33,7 +33,7 @@ func _process(delta: float) -> void:
 		_fire_timer = FIRE_COOLDOWN
 		var player := get_tree().get_first_node_in_group("player") as Node2D
 		if player and is_instance_valid(player):
-			var dist := abs(player.global_position.x - global_position.x)
+			var dist: float = absf(player.global_position.x - global_position.x)
 			if dist >= MIN_FIRE_DIST and dist <= FIRE_RANGE:
 				_fire_bolt(player.global_position)
 
