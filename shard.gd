@@ -22,14 +22,14 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 
 func _apply_color() -> void:
-	var data := SHARD_DATA[shard_type]
-	var spr := $Sprite2D
-	var tex_path: String = data["tex"]
+	var data: Dictionary = SHARD_DATA[shard_type]
+	var spr: Sprite2D = $Sprite2D
+	var tex_path: String = str(data.get("tex", ""))
 	if ResourceLoader.exists(tex_path):
 		spr.texture = load(tex_path)
 		spr.modulate = Color(1, 1, 1, 1)
 	else:
-		spr.modulate = data["tint"]
+		spr.modulate = data.get("tint", Color.WHITE)
 
 func _process(delta: float) -> void:
 	bob_offset += delta * 3.0
@@ -40,10 +40,12 @@ func _on_body_entered(body: Node2D) -> void:
 		_collect(body)
 
 func _collect(player: Node2D) -> void:
-	var screen_pos := get_viewport().get_canvas_transform() * global_position
-	var tex := $Sprite2D.texture
-	var col: Color = SHARD_DATA[shard_type]["tint"]
-	var parent := get_parent()
+	var screen_pos: Vector2 = get_viewport().get_canvas_transform() * global_position
+	var spr: Sprite2D = $Sprite2D
+	var tex: Texture2D = spr.texture
+	var data: Dictionary = SHARD_DATA[shard_type]
+	var col: Color = data.get("tint", Color.WHITE)
+	var parent: Node = get_parent()
 
 	var sound := AudioStreamPlayer.new()
 	sound.stream = load("res://echoveil/music/animations/shard revel.mp3")
@@ -51,6 +53,8 @@ func _collect(player: Node2D) -> void:
 	sound.play()
 	sound.finished.connect(sound.queue_free)
 
+	# Capture before queue_free — lambda must never touch self
+	var st: int = shard_type
 	queue_free()
 
 	var anim_layer := CanvasLayer.new()
@@ -64,8 +68,6 @@ func _collect(player: Node2D) -> void:
 	sprite.position = screen_pos
 	anim_layer.add_child(sprite)
 
-	# Capture what we need before queue_free() so the lambda never touches self
-	var st := shard_type
 	var tween := anim_layer.create_tween()
 	tween.set_parallel(true)
 	tween.tween_property(sprite, "scale", Vector2(0.055, 0.055), 0.08)
@@ -77,8 +79,6 @@ func _collect(player: Node2D) -> void:
 	tween.chain().tween_callback(func():
 		GameState.shards_collected += 1
 		match st:
-			ShardType.TEAL:
-				pass
 			ShardType.GREEN:
 				if GameState.health < 3:
 					GameState.health = min(3, GameState.health + 1)
