@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://canvas_beam.gd" id="1_beam"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_beam"]
+size = Vector2(2000, 80)
+
+[node name="CanvasBeam" type="Area2D"]
+collision_layer = 2
+collision_mask = 1
+monitoring = true
+script = ExtResource("1_beam")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_beam")
+disabled = true
