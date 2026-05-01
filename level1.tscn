@@ -217,15 +217,6 @@ drag_bottom_margin = 0.25
 [node name="Drone1" parent="." unique_id=44708029 instance=ExtResource("5_drone")]
 position = Vector2(900, 560)
 
-[node name="Shard1" parent="." unique_id=1472864411 instance=ExtResource("6_shard")]
-position = Vector2(315, 632)
-
-[node name="Shard2" parent="." unique_id=1050880144 instance=ExtResource("6_shard")]
-position = Vector2(380, 633)
-
-[node name="Shard3" parent="." unique_id=1534389029 instance=ExtResource("6_shard")]
-position = Vector2(437, 497)
-shard_type = 1
 
 [node name="Shard4" parent="." unique_id=492942105 instance=ExtResource("6_shard")]
 position = Vector2(701, 398)
@@ -247,12 +238,14 @@ shard_type = 4
 
 [node name="Rock1" parent="." unique_id=50156717 instance=ExtResource("20_rock")]
 position = Vector2(580, 610)
+hidden_shard = 0
 
 [node name="Rock2" parent="." unique_id=1834860937 instance=ExtResource("20_rock")]
 position = Vector2(780, 610)
 
 [node name="Rock3" parent="." unique_id=1360775910 instance=ExtResource("20_rock")]
 position = Vector2(430, 470)
+hidden_shard = 1
 
 [node name="Rock4" parent="." unique_id=1259694235 instance=ExtResource("20_rock")]
 position = Vector2(1150, 610)

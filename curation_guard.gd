@@ -4,8 +4,9 @@ const WALK_SPEED    := 85.0
 const GRAVITY       := 980.0
 const PATROL_RANGE  := 160.0
 const FIRE_RANGE    := 250.0   # must be within this horizontal distance to shoot
-const MIN_FIRE_DIST := 110.0   # won't shoot if player is closer than this (too close to spawn bolt safely)
+const MIN_FIRE_DIST := 110.0   # won't shoot if player is closer than this
 const FIRE_COOLDOWN := 6.0
+const WARN_TIME     := 0.9     # seconds of red-flash warning before bolt fires
 
 @export var drop_color: int = 2  # 0=TEAL 1=GREEN 2=ORANGE 3=PURPLE 4=GOLD
 
@@ -18,6 +19,7 @@ var _stunned    := false
 var _stun_timer := 0.0
 var _dead       := false
 var _fire_timer := 5.0   # long initial delay so player can orient before first shot
+var _warning    := false # true during pre-shot telegraph window
 
 func _ready() -> void:
 	add_to_group("enemy")
@@ -29,20 +31,49 @@ func _process(delta: float) -> void:
 	if _dead or _stunned:
 		return
 	_fire_timer -= delta
+
+	# ── Warning telegraph ─────────────────────────────────────────────────────
+	if not _warning and _fire_timer <= WARN_TIME:
+		var player := get_tree().get_first_node_in_group("player") as Node2D
+		if player and is_instance_valid(player):
+			var dist: float = absf(player.global_position.x - global_position.x)
+			if dist >= MIN_FIRE_DIST and dist <= FIRE_RANGE:
+				_warning = true
+				_start_warn(player.global_position)
+
+	# ── Fire ─────────────────────────────────────────────────────────────────
 	if _fire_timer <= 0.0:
 		_fire_timer = FIRE_COOLDOWN
+		_warning = false
 		var player := get_tree().get_first_node_in_group("player") as Node2D
 		if player and is_instance_valid(player):
 			var dist: float = absf(player.global_position.x - global_position.x)
 			if dist >= MIN_FIRE_DIST and dist <= FIRE_RANGE:
 				_fire_bolt(player.global_position)
 
+func _start_warn(target_pos: Vector2) -> void:
+	# Face the player immediately so the flash "reads" as a threat
+	sprite.flip_h = target_pos.x > global_position.x
+
+	# Warning sound
+	var snd := AudioStreamPlayer.new()
+	snd.stream = load("res://echoveil/music/animations/beam_warn.mp3")
+	snd.volume_db = -4.0
+	get_parent().add_child(snd)
+	snd.play()
+	snd.finished.connect(snd.queue_free)
+
+	# Red pulse flash  (4 pulses over ~0.8 s)
+	var tw := create_tween().set_loops(4)
+	tw.tween_property(sprite, "modulate", Color(2.5, 0.2, 0.2, 1.0), 0.10)
+	tw.tween_property(sprite, "modulate", Color.WHITE, 0.12)
+
 func _fire_bolt(target_pos: Vector2) -> void:
 	var bolt_scene := load("res://laser_bolt.tscn") as PackedScene
 	if not bolt_scene:
 		return
 	var bolt := bolt_scene.instantiate()
-	# Spawn in front of the guard, not at its center, to avoid overlap with player
+	# Spawn in front of the guard at chest height
 	var spawn_offset := Vector2(60.0 * (1.0 if target_pos.x > global_position.x else -1.0), -88)
 	bolt.global_position = global_position + spawn_offset
 	get_parent().add_child(bolt)
@@ -66,6 +97,7 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, WALK_SPEED * 4)
 		if _stun_timer <= 0.0:
 			_stunned = false
+			_warning = false
 			sprite.play(&"walk")
 	else:
 		if abs(position.x - _start_x) >= PATROL_RANGE or is_on_wall():
@@ -86,6 +118,8 @@ func take_damage(_amount: int) -> void:
 	if _dead or _stunned:
 		return
 	hp -= 1
+	_warning = false
+	sprite.modulate = Color.WHITE  # cancel any warn flash
 	var tw := create_tween()
 	tw.tween_property(sprite, "modulate", Color(2.0, 2.0, 2.0, 1.0), 0.05)
 	tw.tween_property(sprite, "modulate", Color.WHITE, 0.12)
@@ -97,12 +131,15 @@ func take_damage(_amount: int) -> void:
 		sprite.play(&"stun")
 
 func stun(duration: float) -> void:
+	_warning = false
+	sprite.modulate = Color.WHITE
 	_stunned = true
 	_stun_timer = max(_stun_timer, duration)
 	sprite.play(&"stun")
 
 func _die() -> void:
 	_dead = true
+	_warning = false
 	velocity = Vector2.ZERO
 	set_physics_process(false)
 	var shard_scene := load("res://shard.tscn") as PackedScene
