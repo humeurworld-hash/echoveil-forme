@@ -16,8 +16,27 @@ const NUM_REGIONS = [
 var _digit_textures: Array = []
 var _digit_rects: Array = []
 
+const PAUSE_MENU_SCENE := preload("res://pause_menu.tscn")
+
 func _ready() -> void:
 	TransitionLayer.fade_in(0.5)
+
+	# ── Pause button — top-centre, large enough for a thumb tap ──────────────
+	var pause_btn := Button.new()
+	pause_btn.text = "II"
+	pause_btn.add_theme_font_size_override("font_size", 28)
+	pause_btn.add_theme_color_override("font_color", Color(0.80, 0.80, 0.80, 0.80))
+	pause_btn.custom_minimum_size = Vector2(80, 64)
+	pause_btn.anchor_left   = 0.5
+	pause_btn.anchor_top    = 0.0
+	pause_btn.anchor_right  = 0.5
+	pause_btn.anchor_bottom = 0.0
+	pause_btn.offset_left   = -40.0
+	pause_btn.offset_top    = 10.0
+	pause_btn.offset_right  = 40.0
+	pause_btn.offset_bottom = 74.0
+	pause_btn.pressed.connect(_open_pause)
+	add_child(pause_btn)
 
 	for i in range(10):
 		var img = load("res://echoveil/UI/mourk counter/numbers/Numbers/" + str(i) + ".png")
@@ -41,6 +60,10 @@ func _ready() -> void:
 		r.offset_bottom = 86.0
 		add_child(r)
 		_digit_rects.append(r)
+
+func _open_pause() -> void:
+	var menu := PAUSE_MENU_SCENE.instantiate()
+	get_parent().add_child(menu)
 
 func _process(_delta: float) -> void:
 	var player = get_tree().get_first_node_in_group("player")

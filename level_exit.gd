@@ -91,8 +91,7 @@ func _do_transition() -> void:
 	GameState.save()
 	var next_scene := "res://level%d.tscn" % LevelManager.current_level
 	if not ResourceLoader.exists(next_scene):
-		LevelManager.current_level = 0
-		next_scene = "res://main_menu.tscn"
+		next_scene = "res://win_screen.tscn"
 	TransitionLayer.fade_out(
 		func(): get_tree().call_deferred("change_scene_to_file", next_scene),
 		0.5
