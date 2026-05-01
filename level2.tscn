@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://5h85q5nijjse" path="res://echoveil/UI/Life shards/220E297F-BA40-4195-9E91-D295DD553BA9-1.png" id="10_ls"]
 [ext_resource type="PackedScene" path="res://touch_controls.tscn" id="11_touch"]
 [ext_resource type="Texture2D" uid="uid://dsl4xo7l1hlh3" path="res://echoveil/platforms/Background_far layer.PNG" id="13_bg"]
+[ext_resource type="Texture2D" path="res://echoveil/backgrounds/bg_level2.png" id="13_bg_l2"]
 [ext_resource type="Texture2D" uid="uid://djo8ohk2ayp4g" path="res://echoveil/platforms/Fog layer.PNG" id="16_fog"]
 [ext_resource type="Texture2D" uid="uid://dfo6gvdmoemta" path="res://echoveil/platforms/Ledge two.png" id="17_ledge2"]
 [ext_resource type="Texture2D" uid="uid://dggeirass816s" path="res://echoveil/platforms/Ledge three.png" id="18_ledge3"]
@@ -67,7 +68,7 @@ offset_right = 869.0
 offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("13_bg")
+texture = ExtResource("13_bg_l2")
 expand_mode = 1
 stretch_mode = 1
 
@@ -83,6 +84,7 @@ position = Vector2(1000, 668)
 shape = SubResource("s_ground")
 
 [node name="GroundTex" type="TextureRect" parent="Ground" unique_id=450820970]
+modulate = Color(0.50, 0.72, 0.88, 1.0)
 offset_left = -1013.0
 offset_top = -187.0
 offset_right = 1031.0
@@ -103,7 +105,7 @@ position = Vector2(2010, 300)
 shape = SubResource("s_wall_r")
 
 [node name="Fog" type="Sprite2D" parent="." unique_id=655000001]
-modulate = Color(1, 1, 1, 0.72)
+modulate = Color(0.45, 0.82, 1.0, 0.62)
 z_index = 1
 position = Vector2(1000, 270.93)
 scale = Vector2(0.518, 1.1165401)
