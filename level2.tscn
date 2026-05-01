@@ -282,7 +282,7 @@ position = Vector2(700, 180)
 position = Vector2(1500, 180)
 
 [node name="Platform6" type="StaticBody2D" parent="." unique_id=3100000001]
-position = Vector2(1900, 490)
+position = Vector2(1920, 360)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform6" unique_id=3100000002]
 shape = SubResource("s_plat2")
@@ -295,7 +295,7 @@ region_enabled = true
 region_rect = Rect2(0, 0, 1536, 650)
 
 [node name="Platform7" type="StaticBody2D" parent="." unique_id=3100000004]
-position = Vector2(2150, 370)
+position = Vector2(2110, 540)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform7" unique_id=3100000005]
 shape = SubResource("s_plat3")
@@ -308,7 +308,7 @@ region_enabled = true
 region_rect = Rect2(0, 0, 1536, 650)
 
 [node name="Platform8" type="StaticBody2D" parent="." unique_id=3100000007]
-position = Vector2(2420, 480)
+position = Vector2(2280, 415)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform8" unique_id=3100000008]
 shape = SubResource("s_plat2")
@@ -321,7 +321,7 @@ region_enabled = true
 region_rect = Rect2(0, 0, 1536, 650)
 
 [node name="Platform9" type="StaticBody2D" parent="." unique_id=3100000010]
-position = Vector2(2700, 355)
+position = Vector2(2450, 260)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform9" unique_id=3100000011]
 shape = SubResource("s_plat1")
@@ -334,7 +334,7 @@ region_enabled = true
 region_rect = Rect2(0, 0, 1536, 650)
 
 [node name="Platform10" type="StaticBody2D" parent="." unique_id=3100000013]
-position = Vector2(2960, 460)
+position = Vector2(2700, 490)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform10" unique_id=3100000014]
 shape = SubResource("s_plat3")
@@ -347,12 +347,38 @@ region_enabled = true
 region_rect = Rect2(0, 0, 1536, 650)
 
 [node name="Platform11" type="StaticBody2D" parent="." unique_id=3100000016]
-position = Vector2(3210, 375)
+position = Vector2(2890, 310)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform11" unique_id=3100000017]
 shape = SubResource("s_plat2")
 
 [node name="LedgeTex" type="Sprite2D" parent="Platform11" unique_id=3100000018]
+position = Vector2(122.00003, -9)
+scale = Vector2(0.3296484, 0.26)
+texture = ExtResource("5_3l65w")
+region_enabled = true
+region_rect = Rect2(0, 0, 1536, 650)
+
+[node name="Platform12" type="StaticBody2D" parent="." unique_id=3200000010]
+position = Vector2(3070, 200)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform12" unique_id=3200000011]
+shape = SubResource("s_plat3")
+
+[node name="LedgeTex" type="Sprite2D" parent="Platform12" unique_id=3200000012]
+position = Vector2(-147, -39)
+scale = Vector2(0.3296484, 0.26)
+texture = ExtResource("17_ledge2")
+region_enabled = true
+region_rect = Rect2(0, 0, 1536, 650)
+
+[node name="Platform13" type="StaticBody2D" parent="." unique_id=3200000013]
+position = Vector2(3250, 430)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform13" unique_id=3200000014]
+shape = SubResource("s_plat2")
+
+[node name="LedgeTex" type="Sprite2D" parent="Platform13" unique_id=3200000015]
 position = Vector2(122.00003, -9)
 scale = Vector2(0.3296484, 0.26)
 texture = ExtResource("5_3l65w")
@@ -385,22 +411,22 @@ position = Vector2(2420, 195)
 position = Vector2(2950, 195)
 
 [node name="Shard11" parent="." unique_id=1372864421 instance=ExtResource("6_shard")]
-position = Vector2(1950, 468)
+position = Vector2(1920, 338)
 
 [node name="Shard12" parent="." unique_id=1372864422 instance=ExtResource("6_shard")]
-position = Vector2(2150, 348)
+position = Vector2(2450, 238)
 shard_type = 2
 
 [node name="Shard13" parent="." unique_id=1372864423 instance=ExtResource("6_shard")]
-position = Vector2(2700, 333)
+position = Vector2(3070, 178)
 shard_type = 1
 
 [node name="Shard14" parent="." unique_id=1372864424 instance=ExtResource("6_shard")]
-position = Vector2(3210, 353)
+position = Vector2(3250, 408)
 shard_type = 4
 
 [node name="AbilityOrb1" parent="." unique_id=3500000001 instance=ExtResource("25_orb")]
-position = Vector2(2960, 438)
+position = Vector2(2890, 278)
 ability = "roll"
 
 [node name="LevelExit" parent="." unique_id=1967320001 instance=ExtResource("21_exit")]

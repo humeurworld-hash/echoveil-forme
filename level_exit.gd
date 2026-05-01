@@ -6,6 +6,8 @@ const ACTIVATE_DIST := 320.0
 var triggered: bool = false
 var _activated: bool = false
 var _pulse: float = 0.0
+var _glow_scale: float = 1.0
+var _glow_dir: float = 1.0
 
 @onready var _anim: AnimatedSprite2D = $AnimatedSprite2D
 
@@ -17,6 +19,15 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_pulse += delta * 2.2
 	queue_redraw()
+
+	# Breathing scale on the glow state
+	if _anim.animation == &"glow":
+		_glow_scale += _glow_dir * delta * 0.35
+		if _glow_scale >= 1.08:
+			_glow_dir = -1.0
+		elif _glow_scale <= 0.92:
+			_glow_dir = 1.0
+		_anim.scale = Vector2(_glow_scale, _glow_scale)
 
 	if triggered or _activated:
 		return
@@ -30,7 +41,6 @@ func _process(delta: float) -> void:
 		_anim.play("open")
 
 func _draw() -> void:
-	# Floating text label above the portal — pulses with the animation.
 	var a := 0.55 + sin(_pulse) * 0.30
 	draw_string(ThemeDB.fallback_font, Vector2(-42, -130), "COREPATH",
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.91, 0.79, 0.30, a))
@@ -39,6 +49,8 @@ func _draw() -> void:
 
 func _on_open_finished() -> void:
 	if _anim.animation == &"open":
+		_anim.scale = Vector2(1.0, 1.0)
+		_glow_scale = 1.0
 		_anim.play("glow")
 
 func _on_body_entered(body: Node2D) -> void:
