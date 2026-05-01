@@ -53,6 +53,9 @@ func _collect(player: Node2D) -> void:
 	sound.play()
 	sound.finished.connect(sound.queue_free)
 
+	# Particle burst in the gem's color before freeing
+	_collect_burst(parent, global_position, col)
+
 	# Capture before queue_free — lambda must never touch self
 	var st: int = shard_type
 	queue_free()
@@ -94,3 +97,24 @@ func _collect(player: Node2D) -> void:
 					player.force_shield()
 		anim_layer.queue_free()
 	)
+
+func _collect_burst(parent: Node, pos: Vector2, color: Color) -> void:
+	var p := CPUParticles2D.new()
+	p.global_position      = pos
+	p.one_shot             = true
+	p.explosiveness        = 1.0
+	p.emitting             = true
+	p.amount               = 18
+	p.lifetime             = 0.55
+	p.direction            = Vector2(0.0, -1.0)
+	p.spread               = 180.0
+	p.initial_velocity_min = 70.0
+	p.initial_velocity_max = 210.0
+	p.gravity              = Vector2(0.0, 360.0)
+	p.scale_amount_min     = 2.5
+	p.scale_amount_max     = 6.0
+	p.color                = color
+	parent.add_child(p)
+	var tw := p.create_tween()
+	tw.tween_interval(0.75)
+	tw.tween_callback(p.queue_free)
