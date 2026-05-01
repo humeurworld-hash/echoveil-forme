@@ -146,17 +146,20 @@ func _ready() -> void:
 	bot_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bot_bar)
 
-	# ── 6. SKIP button (touch-friendly, bottom-right) ────────────────────────
+	# ── 6. SKIP button — large touch target, safe-area-aware ────────────────
 	var skip_btn := Button.new()
 	skip_btn.text = "SKIP  ›"
-	skip_btn.add_theme_font_size_override("font_size", 30)
-	skip_btn.add_theme_color_override("font_color", Color(0.55, 0.42, 0.70, 0.85))
-	skip_btn.custom_minimum_size = Vector2(130, 56)
+	skip_btn.add_theme_font_size_override("font_size", 32)
+	skip_btn.add_theme_color_override("font_color", Color(0.55, 0.42, 0.70, 0.90))
+	skip_btn.custom_minimum_size = Vector2(180, 72)
 	skip_btn.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	skip_btn.offset_left   = -148.0
-	skip_btn.offset_top    = -72.0
-	skip_btn.offset_right  = -18.0
-	skip_btn.offset_bottom = -16.0
+	# offset_bottom = -90 keeps the button above the iOS home indicator bar
+	skip_btn.offset_left   = -210.0
+	skip_btn.offset_top    = -108.0
+	skip_btn.offset_right  = -30.0
+	skip_btn.offset_bottom = -36.0
+	skip_btn.mouse_filter  = Control.MOUSE_FILTER_STOP
+	skip_btn.z_index       = 10
 	skip_btn.pressed.connect(func():
 		if _tween: _tween.kill()
 		_finish()
@@ -170,9 +173,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _done:
 		return
 	var skip := false
-	if event is InputEventKey       and event.pressed and not event.echo: skip = true
-	elif event is InputEventMouseButton  and event.pressed:               skip = true
-	elif event is InputEventJoypadButton and event.pressed:               skip = true
+	if event is InputEventKey         and event.pressed and not event.echo: skip = true
+	elif event is InputEventMouseButton  and event.pressed:                 skip = true
+	elif event is InputEventJoypadButton and event.pressed:                 skip = true
+	elif event is InputEventScreenTouch  and event.pressed:                 skip = true
 	if skip:
 		if _tween: _tween.kill()
 		_finish()
