@@ -11,89 +11,101 @@
 layer = 10
 script = ExtResource("1_touch")
 
+; ── LEFT THUMB ─────────────────────────────────────────────────────────────
+; Two 160×160 movement buttons anchored to the bottom-left corner.
+; 80 px left margin clears the Dynamic Island / notch on either landscape
+; orientation.  100 px bottom margin clears the Home indicator bar.
+
 [node name="LeftBtn" type="TextureButton" parent="."]
 anchor_left = 0.0
 anchor_top = 1.0
 anchor_right = 0.0
 anchor_bottom = 1.0
-offset_left = 15.0
-offset_top = -72.0
-offset_right = 105.0
-offset_bottom = -12.0
+offset_left = 80.0
+offset_top = -260.0
+offset_right = 240.0
+offset_bottom = -100.0
 ignore_texture_size = true
 stretch_mode = 0
 texture_normal = ExtResource("2_left")
-modulate = Color(1, 1, 1, 0.75)
+modulate = Color(1, 1, 1, 0.82)
 
 [node name="RightBtn" type="TextureButton" parent="."]
 anchor_left = 0.0
 anchor_top = 1.0
 anchor_right = 0.0
 anchor_bottom = 1.0
-offset_left = 115.0
-offset_top = -72.0
-offset_right = 205.0
-offset_bottom = -12.0
+offset_left = 255.0
+offset_top = -260.0
+offset_right = 415.0
+offset_bottom = -100.0
 ignore_texture_size = true
 stretch_mode = 0
 texture_normal = ExtResource("3_right")
-modulate = Color(1, 1, 1, 0.75)
+modulate = Color(1, 1, 1, 0.82)
+
+; ── RIGHT THUMB — 2 × 2 action grid ───────────────────────────────────────
+; All four buttons are 160×160, anchored to the bottom-right corner.
+; 80 px right margin and 100 px bottom margin for safe area clearance.
+; Layout (right edge → left, bottom → top):
+;   Bottom row :  [ Swing ]  [ Jump  ]
+;   Top row    :  [ Break ]  [ Roll  ]
 
 [node name="JumpBtn" type="TextureButton" parent="."]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -185.0
-offset_top = -90.0
-offset_right = -105.0
-offset_bottom = -10.0
+offset_left = -240.0
+offset_top = -260.0
+offset_right = -80.0
+offset_bottom = -100.0
 ignore_texture_size = true
 stretch_mode = 0
 texture_normal = ExtResource("4_jump")
-modulate = Color(1, 1, 1, 0.75)
+modulate = Color(1, 1, 1, 0.82)
 
 [node name="SwingBtn" type="TextureButton" parent="."]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -90.0
-offset_top = -88.0
-offset_right = -10.0
-offset_bottom = -8.0
+offset_left = -420.0
+offset_top = -260.0
+offset_right = -260.0
+offset_bottom = -100.0
 ignore_texture_size = true
 stretch_mode = 0
 texture_normal = ExtResource("5_axe")
-modulate = Color(1, 1, 1, 0.75)
-
-[node name="BreakBtn" type="TextureButton" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -285.0
-offset_top = -90.0
-offset_right = -200.0
-offset_bottom = -5.0
-ignore_texture_size = true
-stretch_mode = 0
-texture_normal = ExtResource("6_power")
-modulate = Color(0.9, 0.5, 1.0, 0.75)
+modulate = Color(1, 1, 1, 0.82)
 
 [node name="RollBtn" type="TextureButton" parent="."]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -385.0
-offset_top = -90.0
-offset_right = -298.0
-offset_bottom = -5.0
+offset_left = -240.0
+offset_top = -440.0
+offset_right = -80.0
+offset_bottom = -280.0
 ignore_texture_size = true
 stretch_mode = 0
 texture_normal = ExtResource("4_jump")
-modulate = Color(0.4, 1.0, 0.75, 0.75)
+modulate = Color(0.4, 1.0, 0.75, 0.82)
+
+[node name="BreakBtn" type="TextureButton" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -420.0
+offset_top = -440.0
+offset_right = -260.0
+offset_bottom = -280.0
+ignore_texture_size = true
+stretch_mode = 0
+texture_normal = ExtResource("6_power")
+modulate = Color(0.9, 0.5, 1.0, 0.82)
 
 [connection signal="button_down" from="LeftBtn" to="." method="_on_left_down"]
 [connection signal="button_up" from="LeftBtn" to="." method="_on_left_up"]
