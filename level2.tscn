@@ -23,9 +23,10 @@
 [ext_resource type="PackedScene" path="res://canvas_beam.tscn" id="22_beam"]
 [ext_resource type="PackedScene" path="res://curation_guard.tscn" id="23_guard"]
 [ext_resource type="PackedScene" path="res://canvas_suppressor.tscn" id="24_sup"]
+[ext_resource type="PackedScene" path="res://ability_orb.tscn" id="25_orb"]
 
 [sub_resource type="RectangleShape2D" id="s_ground"]
-size = Vector2(3000, 32)
+size = Vector2(5000, 32)
 
 [sub_resource type="RectangleShape2D" id="s_wall_l"]
 size = Vector2(20, 800)
@@ -87,7 +88,7 @@ shape = SubResource("s_ground")
 modulate = Color(0.50, 0.72, 0.88, 1.0)
 offset_left = -1013.0
 offset_top = -187.0
-offset_right = 1031.0
+offset_right = 2520.0
 offset_bottom = 386.0
 texture = ExtResource("2_hx44q")
 expand_mode = 1
@@ -99,7 +100,7 @@ position = Vector2(-10, 300)
 shape = SubResource("s_wall_l")
 
 [node name="WallRight" type="StaticBody2D" parent="." unique_id=1864625809]
-position = Vector2(2010, 300)
+position = Vector2(3510, 300)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight" unique_id=468816069]
 shape = SubResource("s_wall_r")
@@ -202,7 +203,7 @@ shape = SubResource("s_player")
 position = Vector2(0, -80)
 limit_left = 0
 limit_top = -200
-limit_right = 2000
+limit_right = 3500
 limit_bottom = 700
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
@@ -280,8 +281,130 @@ position = Vector2(700, 180)
 [node name="Suppressor2" parent="." unique_id=2401000002 instance=ExtResource("24_sup")]
 position = Vector2(1500, 180)
 
+[node name="Platform6" type="StaticBody2D" parent="." unique_id=3100000001]
+position = Vector2(1900, 490)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform6" unique_id=3100000002]
+shape = SubResource("s_plat2")
+
+[node name="LedgeTex" type="Sprite2D" parent="Platform6" unique_id=3100000003]
+position = Vector2(122.00003, -9)
+scale = Vector2(0.3296484, 0.26)
+texture = ExtResource("5_3l65w")
+region_enabled = true
+region_rect = Rect2(0, 0, 1536, 650)
+
+[node name="Platform7" type="StaticBody2D" parent="." unique_id=3100000004]
+position = Vector2(2150, 370)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform7" unique_id=3100000005]
+shape = SubResource("s_plat3")
+
+[node name="LedgeTex" type="Sprite2D" parent="Platform7" unique_id=3100000006]
+position = Vector2(-147, -39)
+scale = Vector2(0.3296484, 0.26)
+texture = ExtResource("17_ledge2")
+region_enabled = true
+region_rect = Rect2(0, 0, 1536, 650)
+
+[node name="Platform8" type="StaticBody2D" parent="." unique_id=3100000007]
+position = Vector2(2420, 480)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform8" unique_id=3100000008]
+shape = SubResource("s_plat2")
+
+[node name="LedgeTex" type="Sprite2D" parent="Platform8" unique_id=3100000009]
+position = Vector2(-253.99994, 41.000008)
+scale = Vector2(0.50143886, 0.32999998)
+texture = ExtResource("18_ledge3")
+region_enabled = true
+region_rect = Rect2(0, 0, 1536, 650)
+
+[node name="Platform9" type="StaticBody2D" parent="." unique_id=3100000010]
+position = Vector2(2700, 355)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform9" unique_id=3100000011]
+shape = SubResource("s_plat1")
+
+[node name="LedgeTex" type="Sprite2D" parent="Platform9" unique_id=3100000012]
+position = Vector2(342.45752, 92)
+scale = Vector2(0.5801335, 0.33461532)
+texture = ExtResource("19_ledge1")
+region_enabled = true
+region_rect = Rect2(0, 0, 1536, 650)
+
+[node name="Platform10" type="StaticBody2D" parent="." unique_id=3100000013]
+position = Vector2(2960, 460)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform10" unique_id=3100000014]
+shape = SubResource("s_plat3")
+
+[node name="LedgeTex" type="Sprite2D" parent="Platform10" unique_id=3100000015]
+position = Vector2(-147, -39)
+scale = Vector2(0.3296484, 0.26)
+texture = ExtResource("17_ledge2")
+region_enabled = true
+region_rect = Rect2(0, 0, 1536, 650)
+
+[node name="Platform11" type="StaticBody2D" parent="." unique_id=3100000016]
+position = Vector2(3210, 375)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform11" unique_id=3100000017]
+shape = SubResource("s_plat2")
+
+[node name="LedgeTex" type="Sprite2D" parent="Platform11" unique_id=3100000018]
+position = Vector2(122.00003, -9)
+scale = Vector2(0.3296484, 0.26)
+texture = ExtResource("5_3l65w")
+region_enabled = true
+region_rect = Rect2(0, 0, 1536, 650)
+
+[node name="Rock5" parent="." unique_id=3200000001 instance=ExtResource("20_rock")]
+position = Vector2(1930, 610)
+hidden_shard = 4
+
+[node name="Rock6" parent="." unique_id=3200000002 instance=ExtResource("20_rock")]
+position = Vector2(2630, 610)
+
+[node name="Rock7" parent="." unique_id=3200000003 instance=ExtResource("20_rock")]
+position = Vector2(3060, 610)
+hidden_shard = 1
+
+[node name="Guard3" parent="." unique_id=3300000001 instance=ExtResource("23_guard")]
+position = Vector2(2060, 652)
+drop_color = 1
+
+[node name="Guard4" parent="." unique_id=3300000002 instance=ExtResource("23_guard")]
+position = Vector2(2760, 652)
+drop_color = 4
+
+[node name="Suppressor3" parent="." unique_id=3400000001 instance=ExtResource("24_sup")]
+position = Vector2(2420, 195)
+
+[node name="Suppressor4" parent="." unique_id=3400000002 instance=ExtResource("24_sup")]
+position = Vector2(2950, 195)
+
+[node name="Shard11" parent="." unique_id=1372864421 instance=ExtResource("6_shard")]
+position = Vector2(1950, 468)
+
+[node name="Shard12" parent="." unique_id=1372864422 instance=ExtResource("6_shard")]
+position = Vector2(2150, 348)
+shard_type = 2
+
+[node name="Shard13" parent="." unique_id=1372864423 instance=ExtResource("6_shard")]
+position = Vector2(2700, 333)
+shard_type = 1
+
+[node name="Shard14" parent="." unique_id=1372864424 instance=ExtResource("6_shard")]
+position = Vector2(3210, 353)
+shard_type = 4
+
+[node name="AbilityOrb1" parent="." unique_id=3500000001 instance=ExtResource("25_orb")]
+position = Vector2(2960, 438)
+ability = "roll"
+
 [node name="LevelExit" parent="." unique_id=1967320001 instance=ExtResource("21_exit")]
-position = Vector2(1955, 552)
+position = Vector2(3455, 552)
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=558924752]
 script = ExtResource("4_hud")
