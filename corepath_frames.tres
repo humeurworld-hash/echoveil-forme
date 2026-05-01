@@ -1,0 +1,42 @@
+[gd_resource type="SpriteFrames" load_steps=5 format=3]
+
+[ext_resource type="Texture2D" path="res://echoveil/corepath/corepath_1.png" id="1_cp1"]
+[ext_resource type="Texture2D" path="res://echoveil/corepath/corepath_2.png" id="2_cp2"]
+[ext_resource type="Texture2D" path="res://echoveil/corepath/corepath_3.png" id="3_cp3"]
+[ext_resource type="Texture2D" path="res://echoveil/corepath/corepath_4.png" id="4_cp4"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_cp1")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_cp1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_cp2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_cp3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_cp4")
+}],
+"loop": false,
+"name": &"open",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_cp4")
+}],
+"loop": true,
+"name": &"glow",
+"speed": 1.0
+}]

@@ -1,33 +1,58 @@
 extends Area2D
 
+## Distance (px) at which the corepath begins to open.
+const ACTIVATE_DIST := 320.0
+
 var triggered: bool = false
-var pulse: float = 0.0
+var _activated: bool = false
+var _pulse: float = 0.0
+
+@onready var _anim: AnimatedSprite2D = $AnimatedSprite2D
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
+	_anim.animation_finished.connect(_on_open_finished)
+	_anim.play("idle")
 
 func _process(delta: float) -> void:
-	pulse += delta * 2.2
+	_pulse += delta * 2.2
 	queue_redraw()
 
+	if triggered or _activated:
+		return
+
+	# Start opening when the player walks close enough.
+	var players := get_tree().get_nodes_in_group("player")
+	if players.is_empty():
+		return
+	if global_position.distance_to(players[0].global_position) < ACTIVATE_DIST:
+		_activated = true
+		_anim.play("open")
+
 func _draw() -> void:
-	var alpha := 0.38 + sin(pulse) * 0.22
-	draw_rect(Rect2(-32, -100, 64, 200), Color(0.45, 0.08, 0.95, alpha))
-	draw_rect(Rect2(-32, -100, 64, 200), Color(0.80, 0.45, 1.0, 0.55), false, 2.5)
-	var shimmer_x := sin(pulse * 1.3) * 10.0
-	draw_line(Vector2(shimmer_x, -90), Vector2(shimmer_x, 90), Color(1.0, 0.8, 1.0, 0.35), 4.0)
-	draw_string(ThemeDB.fallback_font, Vector2(-42, -112), "COREPATH", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.91, 0.79, 0.30, 0.85))
-	draw_string(ThemeDB.fallback_font, Vector2(-26, -97),  "AHEAD",    HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.68, 0.55, 0.85, 0.70))
+	# Floating text label above the portal — pulses with the animation.
+	var a := 0.55 + sin(_pulse) * 0.30
+	draw_string(ThemeDB.fallback_font, Vector2(-42, -130), "COREPATH",
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.91, 0.79, 0.30, a))
+	draw_string(ThemeDB.fallback_font, Vector2(-26, -112), "AHEAD",
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.68, 0.55, 0.85, a * 0.85))
+
+func _on_open_finished() -> void:
+	if _anim.animation == &"open":
+		_anim.play("glow")
 
 func _on_body_entered(body: Node2D) -> void:
 	if triggered or not body.is_in_group("player"):
 		return
 	triggered = true
-	set_process(false)   # stop pulse animation
+	set_process(false)
+	# Force the final frame if the player ran straight into it.
+	if not _activated:
+		_activated = true
+		_anim.play("glow")
 	_show_corepath_found()
 
 func _show_corepath_found() -> void:
-	# Overlay canvas
 	var canvas := CanvasLayer.new()
 	canvas.layer = 50
 	get_parent().add_child(canvas)
