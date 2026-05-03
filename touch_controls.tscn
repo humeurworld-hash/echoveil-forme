@@ -1,8 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://touch_controls.gd" id="1_touch"]
-[ext_resource type="Texture2D" path="res://echoveil/UI/Controls /Left arrow .png" id="2_left"]
-[ext_resource type="Texture2D" path="res://echoveil/UI/Controls /Right arrow .png" id="3_right"]
+[ext_resource type="Script" path="res://joystick.gd" id="2_joy"]
 [ext_resource type="Texture2D" path="res://echoveil/UI/Controls /Jump icon.png" id="4_jump"]
 [ext_resource type="Texture2D" path="res://echoveil/UI/Controls /Action axe.png" id="5_axe"]
 [ext_resource type="Texture2D" path="res://echoveil/UI/Controls /Power up.png" id="6_power"]
@@ -11,48 +10,16 @@
 layer = 10
 script = ExtResource("1_touch")
 
-; ── LEFT THUMB — movement ──────────────────────────────────────────────────
-; 175×160 buttons with a 50 px gap so the thumbs can't slip across by accident.
-; 80 px from the left edge clears the Dynamic Island / notch.
+; ── LEFT THUMB — floating joystick ────────────────────────────────────────────
+; Full-screen Control; joystick.gd only reacts to touches on the left 45%.
+; The base snaps to wherever the thumb lands — no fixed dead spot to miss.
 
-[node name="LeftBtn" type="TextureButton" parent="."]
-anchor_left = 0.0
-anchor_top = 1.0
-anchor_right = 0.0
-anchor_bottom = 1.0
-offset_left = 80.0
-offset_top = -240.0
-offset_right = 255.0
-offset_bottom = -80.0
-ignore_texture_size = true
-stretch_mode = 0
-texture_normal = ExtResource("2_left")
-modulate = Color(1, 1, 1, 0.82)
+[node name="Joystick" type="Control" parent="."]
+script = ExtResource("2_joy")
 
-[node name="RightBtn" type="TextureButton" parent="."]
-anchor_left = 0.0
-anchor_top = 1.0
-anchor_right = 0.0
-anchor_bottom = 1.0
-offset_left = 305.0
-offset_top = -240.0
-offset_right = 480.0
-offset_bottom = -80.0
-ignore_texture_size = true
-stretch_mode = 0
-texture_normal = ExtResource("3_right")
-modulate = Color(1, 1, 1, 0.82)
-
-; ── RIGHT THUMB — actions ──────────────────────────────────────────────────
-; Layout (right edge → left):
-;
-;          [ Roll ] [ Break ]
-;          [ Swing ] [ JUMP ]  ← Jump is biggest, far-right, natural thumb rest
-;
-; Jump is 185×175 — visibly largest so the thumb finds it instantly.
-; Swing is the secondary action, same row, 10 px to the left.
-; Roll + Break are the utility tier above — smaller, offset so they
-; don't get hit by accident.
+; ── RIGHT THUMB — action buttons ──────────────────────────────────────────────
+;   [ Roll ] [ Break ]
+;   [ Swing ] [ Jump ]   ← Jump largest, natural thumb rest
 
 [node name="JumpBtn" type="TextureButton" parent="."]
 anchor_left = 1.0
@@ -110,10 +77,6 @@ stretch_mode = 0
 texture_normal = ExtResource("6_power")
 modulate = Color(0.9, 0.5, 1.0, 0.80)
 
-[connection signal="button_down" from="LeftBtn" to="." method="_on_left_down"]
-[connection signal="button_up" from="LeftBtn" to="." method="_on_left_up"]
-[connection signal="button_down" from="RightBtn" to="." method="_on_right_down"]
-[connection signal="button_up" from="RightBtn" to="." method="_on_right_up"]
 [connection signal="button_down" from="JumpBtn" to="." method="_on_jump_down"]
 [connection signal="button_up" from="JumpBtn" to="." method="_on_jump_up"]
 [connection signal="button_down" from="SwingBtn" to="." method="_on_swing_down"]
