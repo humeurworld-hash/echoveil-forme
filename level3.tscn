@@ -1,48 +1,46 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://player.gd" id="1_player"]
-[ext_resource type="Texture2D" path="res://echoveil/platforms/ground_stone 2.PNG" id="2_ground"]
-[ext_resource type="SpriteFrames" path="res://player_frames.tres" id="2_pframes"]
-[ext_resource type="SpriteFrames" path="res://fuse_frames.tres" id="3_fframes"]
-[ext_resource type="Script" path="res://hud.gd" id="4_hud"]
-[ext_resource type="Texture2D" path="res://echoveil/platforms/Ledge long.png" id="5_ledgelong"]
+[ext_resource type="Script" uid="uid://2amuy46p2t3q" path="res://player.gd" id="1_player"]
+[ext_resource type="SpriteFrames" uid="uid://dgco3rqfqmgyb" path="res://player_frames.tres" id="2_pframes"]
+[ext_resource type="SpriteFrames" uid="uid://c7ronklbxhj4o" path="res://fuse_frames.tres" id="3_fframes"]
+[ext_resource type="Script" uid="uid://crdyrd1tl85hc" path="res://hud.gd" id="4_hud"]
 [ext_resource type="PackedScene" path="res://drone.tscn" id="5_drone"]
 [ext_resource type="PackedScene" path="res://shard.tscn" id="6_shard"]
 [ext_resource type="AudioStream" path="res://echoveil/music/Mist in the Circuit.mp3" id="8_music"]
-[ext_resource type="Texture2D" path="res://echoveil/UI/mourk counter/220E297F-BA40-4195-9E91-D295DD553BA9-2.png" id="9_mc"]
-[ext_resource type="Texture2D" path="res://echoveil/UI/Life shards/220E297F-BA40-4195-9E91-D295DD553BA9-1.png" id="10_ls"]
+[ext_resource type="Texture2D" uid="uid://f0lwj0rbq0qt" path="res://echoveil/UI/mourk counter/220E297F-BA40-4195-9E91-D295DD553BA9-2.png" id="9_mc"]
+[ext_resource type="Texture2D" uid="uid://5h85q5nijjse" path="res://echoveil/UI/Life shards/220E297F-BA40-4195-9E91-D295DD553BA9-1.png" id="10_ls"]
 [ext_resource type="PackedScene" path="res://touch_controls.tscn" id="11_touch"]
-[ext_resource type="Texture2D" path="res://echoveil/backgrounds/bg_level3.png" id="13_bg_l3"]
-[ext_resource type="Texture2D" path="res://echoveil/platforms/Fog layer.PNG" id="16_fog"]
-[ext_resource type="Texture2D" path="res://echoveil/platforms/Ledge two.png" id="17_ledge2"]
-[ext_resource type="Texture2D" path="res://echoveil/platforms/Ledge three.png" id="18_ledge3"]
-[ext_resource type="Texture2D" path="res://echoveil/platforms/Ledge.png" id="19_ledge1"]
 [ext_resource type="PackedScene" path="res://rock.tscn" id="20_rock"]
 [ext_resource type="PackedScene" path="res://level_exit.tscn" id="21_exit"]
-[ext_resource type="PackedScene" path="res://canvas_beam.tscn" id="22_beam"]
-[ext_resource type="PackedScene" path="res://curation_guard.tscn" id="23_guard"]
-[ext_resource type="PackedScene" path="res://canvas_suppressor.tscn" id="24_sup"]
+[ext_resource type="PackedScene" path="res://curation_guard.tscn" id="22_guard"]
+[ext_resource type="Script" path="res://room_visual.gd" id="30_rv"]
 
-[sub_resource type="RectangleShape2D" id="s_ground"]
-size = Vector2(5000, 32)
+[sub_resource type="RectangleShape2D" id="s_wall_h"]
+size = Vector2(1920, 48)
 
-[sub_resource type="RectangleShape2D" id="s_wall_l"]
-size = Vector2(20, 800)
-
-[sub_resource type="RectangleShape2D" id="s_wall_r"]
-size = Vector2(20, 800)
-
-[sub_resource type="RectangleShape2D" id="s_plat1"]
-size = Vector2(191, 20)
-
-[sub_resource type="RectangleShape2D" id="s_plat2"]
-size = Vector2(200, 20)
-
-[sub_resource type="RectangleShape2D" id="s_plat3"]
-size = Vector2(160, 20)
+[sub_resource type="RectangleShape2D" id="s_wall_v"]
+size = Vector2(48, 1080)
 
 [sub_resource type="RectangleShape2D" id="s_player"]
-size = Vector2(114, 105)
+size = Vector2(60, 60)
+
+; Fortress corner pillars — same as before
+[sub_resource type="RectangleShape2D" id="s_pillar"]
+size = Vector2(90, 90)
+
+; Pillar-to-wall connector: fills gap from boundary wall to pillar edge.
+; Height = pillar_edge - boundary = 255 - 48 = 207 px  (same at bottom).
+[sub_resource type="RectangleShape2D" id="s_gate_v"]
+size = Vector2(30, 207)
+
+; Horizontal inner walls — subdivide the central fortress arena.
+[sub_resource type="RectangleShape2D" id="s_inner_h"]
+size = Vector2(280, 28)
+
+; Entry / exit corridor baffles — minor snake obstacles before/after the fortress.
+; Height 404 px → top edge at y=48, bottom gap = 580 px (wide but forces a jog).
+[sub_resource type="RectangleShape2D" id="s_corridor_v"]
+size = Vector2(30, 404)
 
 [sub_resource type="AtlasTexture" id="at_mc"]
 atlas = ExtResource("9_mc")
@@ -54,387 +52,345 @@ region = Rect2(913, 413, 119, 230)
 
 [node name="Level3" type="Node2D"]
 
+; ── Background ────────────────────────────────────────────────────────────────
 [node name="Background" type="CanvasLayer" parent="."]
 layer = -10
 
-[node name="FarLayer" type="TextureRect" parent="Background"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -11.0
-offset_top = 1.0
-offset_right = 869.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("13_bg_l3")
-expand_mode = 1
-stretch_mode = 1
+[node name="RoomFloor" type="ColorRect" parent="Background"]
+color = Color(0, 0, 0, 1)
+offset_right = 1920.0
+offset_bottom = 1080.0
 
+; The Crucible Core — ember-red stone
+[node name="RoomVisual" type="Node2D" parent="Background"]
+script = ExtResource("30_rv")
+floor_color = Color(0.11, 0.05, 0.05, 1.0)
+wall_color = Color(0.24, 0.10, 0.10, 1.0)
+crystal_hue = 0.03
+show_entry_arch = true
+show_exit_glow = true
+
+; ── Music ─────────────────────────────────────────────────────────────────────
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_music")
 volume_db = -12.0
 autoplay = true
 
-[node name="Ground" type="StaticBody2D" parent="."]
-position = Vector2(1000, 668)
+; ── Room boundary walls ────────────────────────────────────────────────────────
+[node name="WallTop" type="StaticBody2D" parent="."]
+position = Vector2(960, 24)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
-shape = SubResource("s_ground")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallTop"]
+shape = SubResource("s_wall_h")
 
-[node name="GroundTex" type="TextureRect" parent="Ground"]
-modulate = Color(0.85, 0.38, 0.28, 1.0)
-offset_left = -1013.0
-offset_top = -187.0
-offset_right = 2520.0
-offset_bottom = 386.0
-texture = ExtResource("2_ground")
-expand_mode = 1
+[node name="WallBottom" type="StaticBody2D" parent="."]
+position = Vector2(960, 1056)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallBottom"]
+shape = SubResource("s_wall_h")
 
 [node name="WallLeft" type="StaticBody2D" parent="."]
-position = Vector2(-10, 300)
+position = Vector2(24, 540)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallLeft"]
-shape = SubResource("s_wall_l")
+shape = SubResource("s_wall_v")
 
 [node name="WallRight" type="StaticBody2D" parent="."]
-position = Vector2(3510, 300)
+position = Vector2(1896, 540)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
-shape = SubResource("s_wall_r")
+shape = SubResource("s_wall_v")
 
-[node name="Fog" type="Sprite2D" parent="."]
-modulate = Color(1.0, 0.38, 0.30, 0.58)
-z_index = 1
-position = Vector2(1000, 270.93)
-scale = Vector2(0.518, 1.1165401)
-texture = ExtResource("16_fog")
+; ── Fortress corner pillars ────────────────────────────────────────────────────
+[node name="Pillar1" type="StaticBody2D" parent="."]
+position = Vector2(580, 300)
 
-; ── Original platforms (0–1700 px) ── distinct layout from L1 & L2 ──────────
-; P1–P5: start medium-high, spike HIGH at P2 and P4 to test double-jump immediately
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pillar1"]
+shape = SubResource("s_pillar")
 
-[node name="Platform1" type="StaticBody2D" parent="."]
-position = Vector2(320, 460)
+[node name="Visual" type="ColorRect" parent="Pillar1"]
+color = Color(0.28, 0.14, 0.12, 1.0)
+offset_left = -45.0
+offset_top = -45.0
+offset_right = 45.0
+offset_bottom = 45.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform1"]
-shape = SubResource("s_plat2")
+[node name="Pillar2" type="StaticBody2D" parent="."]
+position = Vector2(580, 780)
 
-[node name="LedgeTex" type="Sprite2D" parent="Platform1"]
-position = Vector2(133.15997, -9)
-scale = Vector2(0.33442703, 0.26)
-texture = ExtResource("5_ledgelong")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pillar2"]
+shape = SubResource("s_pillar")
 
-[node name="Platform2" type="StaticBody2D" parent="."]
-position = Vector2(560, 280)
+[node name="Visual" type="ColorRect" parent="Pillar2"]
+color = Color(0.28, 0.14, 0.12, 1.0)
+offset_left = -45.0
+offset_top = -45.0
+offset_right = 45.0
+offset_bottom = 45.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
-shape = SubResource("s_plat3")
+[node name="Pillar3" type="StaticBody2D" parent="."]
+position = Vector2(1340, 300)
 
-[node name="LedgeTex" type="Sprite2D" parent="Platform2"]
-position = Vector2(-147, -39)
-scale = Vector2(0.3296484, 0.26)
-texture = ExtResource("17_ledge2")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pillar3"]
+shape = SubResource("s_pillar")
 
-[node name="Platform3" type="StaticBody2D" parent="."]
-position = Vector2(790, 440)
+[node name="Visual" type="ColorRect" parent="Pillar3"]
+color = Color(0.28, 0.14, 0.12, 1.0)
+offset_left = -45.0
+offset_top = -45.0
+offset_right = 45.0
+offset_bottom = 45.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
-shape = SubResource("s_plat2")
+[node name="Pillar4" type="StaticBody2D" parent="."]
+position = Vector2(1340, 780)
 
-[node name="LedgeTex" type="Sprite2D" parent="Platform3"]
-position = Vector2(133.15997, -9)
-scale = Vector2(0.33442703, 0.26)
-texture = ExtResource("5_ledgelong")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pillar4"]
+shape = SubResource("s_pillar")
 
-[node name="Platform4" type="StaticBody2D" parent="."]
-position = Vector2(1050, 240)
+[node name="Visual" type="ColorRect" parent="Pillar4"]
+color = Color(0.28, 0.14, 0.12, 1.0)
+offset_left = -45.0
+offset_top = -45.0
+offset_right = 45.0
+offset_bottom = 45.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform4"]
-shape = SubResource("s_plat1")
+; ── Fortress gate walls ────────────────────────────────────────────────────────
+; Each connector bridges the gap between a boundary wall and a pillar edge,
+; turning the pillar pairs into gated archways.
+;
+; Left gate:  GateL_Top  y=48→255  (above Pillar1)
+;             GateL_Bot  y=825→1032 (below Pillar2)
+;             Open slot  y=345→735  (390 px — fits player but guards it)
+;
+; Right gate: GateR_Top / GateR_Bot — mirror of left gate
 
-[node name="LedgeTex" type="Sprite2D" parent="Platform4"]
-position = Vector2(342.45752, 92)
-scale = Vector2(0.5801335, 0.33461532)
-texture = ExtResource("19_ledge1")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
+[node name="GateL_Top" type="StaticBody2D" parent="."]
+position = Vector2(580, 152)
 
-[node name="Platform5" type="StaticBody2D" parent="."]
-position = Vector2(1330, 420)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GateL_Top"]
+shape = SubResource("s_gate_v")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform5"]
-shape = SubResource("s_plat3")
+[node name="Visual" type="ColorRect" parent="GateL_Top"]
+color = Color(0.30, 0.12, 0.10, 1.0)
+offset_left = -15.0
+offset_top = -104.0
+offset_right = 15.0
+offset_bottom = 104.0
 
-[node name="LedgeTex" type="Sprite2D" parent="Platform5"]
-position = Vector2(-147, -39)
-scale = Vector2(0.3296484, 0.26)
-texture = ExtResource("17_ledge2")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
+[node name="GateL_Bot" type="StaticBody2D" parent="."]
+position = Vector2(580, 929)
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GateL_Bot"]
+shape = SubResource("s_gate_v")
+
+[node name="Visual" type="ColorRect" parent="GateL_Bot"]
+color = Color(0.30, 0.12, 0.10, 1.0)
+offset_left = -15.0
+offset_top = -104.0
+offset_right = 15.0
+offset_bottom = 104.0
+
+[node name="GateR_Top" type="StaticBody2D" parent="."]
+position = Vector2(1340, 152)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GateR_Top"]
+shape = SubResource("s_gate_v")
+
+[node name="Visual" type="ColorRect" parent="GateR_Top"]
+color = Color(0.30, 0.12, 0.10, 1.0)
+offset_left = -15.0
+offset_top = -104.0
+offset_right = 15.0
+offset_bottom = 104.0
+
+[node name="GateR_Bot" type="StaticBody2D" parent="."]
+position = Vector2(1340, 929)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GateR_Bot"]
+shape = SubResource("s_gate_v")
+
+[node name="Visual" type="ColorRect" parent="GateR_Bot"]
+color = Color(0.30, 0.12, 0.10, 1.0)
+offset_left = -15.0
+offset_top = -104.0
+offset_right = 15.0
+offset_bottom = 104.0
+
+; ── Inner fortress maze walls ──────────────────────────────────────────────────
+; Two horizontal slabs divide the central arena (x=625→1295, y=345→735)
+; into three horizontal bands.  Passages exist at the left/right ends of each
+; slab (gaps of ~195 px between slab edge and pillar column).
+;
+; InnerH1  y=460  → upper passage (y=345–446)  and middle band (y=474–606)
+; InnerH2  y=620  → middle band (y=474–606)    and lower passage (y=634–735)
+
+[node name="InnerH1" type="StaticBody2D" parent="."]
+position = Vector2(960, 460)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InnerH1"]
+shape = SubResource("s_inner_h")
+
+[node name="Visual" type="ColorRect" parent="InnerH1"]
+color = Color(0.30, 0.12, 0.10, 1.0)
+offset_left = -140.0
+offset_top = -14.0
+offset_right = 140.0
+offset_bottom = 14.0
+
+[node name="InnerH2" type="StaticBody2D" parent="."]
+position = Vector2(960, 620)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InnerH2"]
+shape = SubResource("s_inner_h")
+
+[node name="Visual" type="ColorRect" parent="InnerH2"]
+color = Color(0.30, 0.12, 0.10, 1.0)
+offset_left = -140.0
+offset_top = -14.0
+offset_right = 140.0
+offset_bottom = 14.0
+
+; ── Entry / exit corridor baffles ─────────────────────────────────────────────
+; Single top-hanging baffle in the entry corridor forces a south jog before
+; the player can align with the fortress left gate (y=345–735).
+; Mirror baffle in the exit corridor after the right gate.
+;
+; EntryBaffle  x=360, y=48→452   gap below: y=452–1032
+; ExitBaffle   x=1600, y=628→1032 gap above: y=48–628
+
+[node name="EntryBaffle" type="StaticBody2D" parent="."]
+position = Vector2(360, 250)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EntryBaffle"]
+shape = SubResource("s_corridor_v")
+
+[node name="Visual" type="ColorRect" parent="EntryBaffle"]
+color = Color(0.30, 0.12, 0.10, 1.0)
+offset_left = -15.0
+offset_top = -202.0
+offset_right = 15.0
+offset_bottom = 202.0
+
+[node name="ExitBaffle" type="StaticBody2D" parent="."]
+position = Vector2(1600, 830)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitBaffle"]
+shape = SubResource("s_corridor_v")
+
+[node name="Visual" type="ColorRect" parent="ExitBaffle"]
+color = Color(0.30, 0.12, 0.10, 1.0)
+offset_left = -15.0
+offset_top = -202.0
+offset_right = 15.0
+offset_bottom = 202.0
+
+; ── Player ────────────────────────────────────────────────────────────────────
 [node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
-position = Vector2(180, 580)
+position = Vector2(180, 540)
 script = ExtResource("1_player")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player"]
 position = Vector2(-61, 16)
-scale = Vector2(0.52, 0.52)
+scale = Vector2(0.60, 0.60)
 sprite_frames = ExtResource("2_pframes")
 animation = &"idle"
 autoplay = "idle"
 
 [node name="FuseSprite" type="AnimatedSprite2D" parent="Player"]
-position = Vector2(-20.000006, -184)
+position = Vector2(-20.0, -80.0)
 scale = Vector2(0.36, 0.36)
 sprite_frames = ExtResource("3_fframes")
 animation = &"blank"
 autoplay = "blank"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
-position = Vector2(-62, 22.5)
+position = Vector2(-62, 10)
 shape = SubResource("s_player")
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
-position = Vector2(0, -80)
+position = Vector2(0, 0)
 limit_left = 0
-limit_top = -200
-limit_right = 3500
-limit_bottom = 700
-drag_horizontal_enabled = true
-drag_vertical_enabled = true
-drag_left_margin = 0.35
-drag_top_margin = 0.25
-drag_right_margin = 0.35
-drag_bottom_margin = 0.25
+limit_top = 0
+limit_right = 1920
+limit_bottom = 1080
+
+; ── Enemies — fortress layout ─────────────────────────────────────────────────
+; Drone1 guards entry corridor above EntryBaffle gap.
+; Drone2/3/4 patrol the outer top/bottom corridors beyond the fortress walls.
+; Guard1 stands at the left gate, Guard2 defends the central channel between
+; InnerH1 and InnerH2, Guard3 blocks the right gate.
 
 [node name="Drone1" parent="." instance=ExtResource("5_drone")]
-position = Vector2(640, 390)
+position = Vector2(360, 600)
 
 [node name="Drone2" parent="." instance=ExtResource("5_drone")]
-position = Vector2(1350, 360)
+position = Vector2(960, 180)
 
-[node name="CanvasBeam" parent="." instance=ExtResource("22_beam")]
-position = Vector2(1100, 632)
+[node name="Drone3" parent="." instance=ExtResource("5_drone")]
+position = Vector2(960, 900)
 
-; ── Shards — first section ────────────────────────────────────────────────────
-; High-platform shards reward players who go for the difficult P2 and P4 peaks.
+[node name="Drone4" parent="." instance=ExtResource("5_drone")]
+position = Vector2(580, 160)
 
-[node name="Shard1" parent="." instance=ExtResource("6_shard")]
-position = Vector2(280, 632)
-
-[node name="Shard2" parent="." instance=ExtResource("6_shard")]
-position = Vector2(560, 258)
-shard_type = 1
-
-[node name="Shard3" parent="." instance=ExtResource("6_shard")]
-position = Vector2(640, 258)
-
-[node name="Shard4" parent="." instance=ExtResource("6_shard")]
-position = Vector2(1050, 218)
-shard_type = 2
-
-[node name="Shard5" parent="." instance=ExtResource("6_shard")]
-position = Vector2(1130, 218)
-
-[node name="Shard6" parent="." instance=ExtResource("6_shard")]
-position = Vector2(1330, 398)
-shard_type = 3
-
-[node name="Shard7" parent="." instance=ExtResource("6_shard")]
-position = Vector2(1720, 632)
-shard_type = 4
-
-; ── Rocks — first section ─────────────────────────────────────────────────────
-
-[node name="Rock1" parent="." instance=ExtResource("20_rock")]
-position = Vector2(340, 610)
-
-[node name="Rock2" parent="." instance=ExtResource("20_rock")]
-position = Vector2(910, 610)
-hidden_shard = 0
-
-[node name="Rock3" parent="." instance=ExtResource("20_rock")]
-position = Vector2(1160, 610)
-
-[node name="Rock4" parent="." instance=ExtResource("20_rock")]
-position = Vector2(1550, 610)
-hidden_shard = 3
-
-; ── Guards / suppressors — first section ─────────────────────────────────────
-
-[node name="Guard1" parent="." instance=ExtResource("23_guard")]
-position = Vector2(480, 652)
-drop_color = 1
-
-[node name="Guard2" parent="." instance=ExtResource("23_guard")]
-position = Vector2(1190, 652)
-drop_color = 3
-
-[node name="Suppressor1" parent="." instance=ExtResource("24_sup")]
-position = Vector2(870, 185)
-
-; ── Extended section (x 1880 – 3455) ─────────────────────────────────────────
-; Theme: "The Crucible" — starts high, forces a near-ground danger zone at P8,
-; spikes to ceiling at P10, then alternates down-up to the exit.
-
-[node name="Platform6" type="StaticBody2D" parent="."]
-position = Vector2(1880, 300)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform6"]
-shape = SubResource("s_plat2")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform6"]
-position = Vector2(133.15997, -9)
-scale = Vector2(0.33442703, 0.26)
-texture = ExtResource("5_ledgelong")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform7" type="StaticBody2D" parent="."]
-position = Vector2(2070, 460)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform7"]
-shape = SubResource("s_plat3")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform7"]
-position = Vector2(-147, -39)
-scale = Vector2(0.3296484, 0.26)
-texture = ExtResource("17_ledge2")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform8" type="StaticBody2D" parent="."]
-position = Vector2(2240, 575)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform8"]
-shape = SubResource("s_plat2")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform8"]
-position = Vector2(-253.99994, 41.000008)
-scale = Vector2(0.50143886, 0.32999998)
-texture = ExtResource("18_ledge3")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform9" type="StaticBody2D" parent="."]
-position = Vector2(2440, 350)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform9"]
-shape = SubResource("s_plat1")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform9"]
-position = Vector2(342.45752, 92)
-scale = Vector2(0.5801335, 0.33461532)
-texture = ExtResource("19_ledge1")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform10" type="StaticBody2D" parent="."]
-position = Vector2(2610, 200)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform10"]
-shape = SubResource("s_plat3")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform10"]
-position = Vector2(-147, -39)
-scale = Vector2(0.3296484, 0.26)
-texture = ExtResource("17_ledge2")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform11" type="StaticBody2D" parent="."]
-position = Vector2(2810, 430)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform11"]
-shape = SubResource("s_plat2")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform11"]
-position = Vector2(133.15997, -9)
-scale = Vector2(0.33442703, 0.26)
-texture = ExtResource("5_ledgelong")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform12" type="StaticBody2D" parent="."]
-position = Vector2(3010, 270)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform12"]
-shape = SubResource("s_plat3")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform12"]
-position = Vector2(-147, -39)
-scale = Vector2(0.3296484, 0.26)
-texture = ExtResource("17_ledge2")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform13" type="StaticBody2D" parent="."]
-position = Vector2(3240, 450)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform13"]
-shape = SubResource("s_plat2")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform13"]
-position = Vector2(-253.99994, 41.000008)
-scale = Vector2(0.50143886, 0.32999998)
-texture = ExtResource("18_ledge3")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-; ── Rocks — extended section ──────────────────────────────────────────────────
-
-[node name="Rock5" parent="." instance=ExtResource("20_rock")]
-position = Vector2(2060, 610)
-hidden_shard = 1
-
-[node name="Rock6" parent="." instance=ExtResource("20_rock")]
-position = Vector2(2750, 610)
-
-[node name="Rock7" parent="." instance=ExtResource("20_rock")]
-position = Vector2(3120, 610)
-hidden_shard = 4
-
-; ── Guards / suppressors — extended section ───────────────────────────────────
-
-[node name="Guard3" parent="." instance=ExtResource("23_guard")]
-position = Vector2(2090, 652)
-drop_color = 0
-
-[node name="Guard4" parent="." instance=ExtResource("23_guard")]
-position = Vector2(2680, 652)
+[node name="Guard1" parent="." instance=ExtResource("22_guard")]
+position = Vector2(660, 540)
 drop_color = 2
 
-[node name="Suppressor2" parent="." instance=ExtResource("24_sup")]
-position = Vector2(2310, 185)
+[node name="Guard2" parent="." instance=ExtResource("22_guard")]
+position = Vector2(960, 540)
+drop_color = 0
 
-[node name="Suppressor3" parent="." instance=ExtResource("24_sup")]
-position = Vector2(2860, 185)
+[node name="Guard3" parent="." instance=ExtResource("22_guard")]
+position = Vector2(1260, 540)
+drop_color = 1
 
-; ── Shards — extended section ─────────────────────────────────────────────────
+; ── Shards ────────────────────────────────────────────────────────────────────
+[node name="Shard1" parent="." instance=ExtResource("6_shard")]
+position = Vector2(280, 220)
+
+[node name="Shard2" parent="." instance=ExtResource("6_shard")]
+position = Vector2(280, 860)
+
+[node name="Shard3" parent="." instance=ExtResource("6_shard")]
+position = Vector2(580, 160)
+
+[node name="Shard4" parent="." instance=ExtResource("6_shard")]
+position = Vector2(960, 390)
+
+[node name="Shard5" parent="." instance=ExtResource("6_shard")]
+position = Vector2(960, 690)
+
+[node name="Shard6" parent="." instance=ExtResource("6_shard")]
+position = Vector2(1340, 160)
+
+[node name="Shard7" parent="." instance=ExtResource("6_shard")]
+position = Vector2(1660, 220)
 
 [node name="Shard8" parent="." instance=ExtResource("6_shard")]
-position = Vector2(1880, 278)
+position = Vector2(1660, 860)
 
-[node name="Shard9" parent="." instance=ExtResource("6_shard")]
-position = Vector2(2440, 328)
-shard_type = 1
+; ── Rocks (Rock3 hides Prime Mourk) ──────────────────────────────────────────
+[node name="Rock1" parent="." instance=ExtResource("20_rock")]
+position = Vector2(380, 790)
 
-[node name="Shard10" parent="." instance=ExtResource("6_shard")]
-position = Vector2(2810, 408)
+[node name="Rock2" parent="." instance=ExtResource("20_rock")]
+position = Vector2(700, 790)
 
-[node name="Shard11" parent="." instance=ExtResource("6_shard")]
-position = Vector2(3240, 428)
-shard_type = 2
+[node name="Rock3" parent="." instance=ExtResource("20_rock")]
+position = Vector2(1000, 790)
+hidden_shard = 3
 
+[node name="Rock4" parent="." instance=ExtResource("20_rock")]
+position = Vector2(1300, 790)
+
+[node name="Rock5" parent="." instance=ExtResource("20_rock")]
+position = Vector2(1620, 790)
+
+; ── Level exit ────────────────────────────────────────────────────────────────
 [node name="LevelExit" parent="." instance=ExtResource("21_exit")]
-position = Vector2(3455, 552)
+position = Vector2(1860, 540)
 
+; ── HUD ───────────────────────────────────────────────────────────────────────
 [node name="HUD" type="CanvasLayer" parent="."]
 script = ExtResource("4_hud")
 
@@ -499,13 +455,14 @@ stretch_mode = 6
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -120.0
+offset_left = -130.0
 offset_top = 65.0
 offset_right = -10.0
-offset_bottom = 92.0
+offset_bottom = 94.0
 grow_horizontal = 0
-theme_override_colors/font_color = Color(0.9, 0.3, 1, 1)
-theme_override_font_sizes/font_size = 37
+theme_override_colors/font_color = Color(0.15, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
+text = "LV  1"
 
 [node name="TouchControls" parent="." instance=ExtResource("11_touch")]

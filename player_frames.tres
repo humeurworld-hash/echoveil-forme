@@ -13,6 +13,16 @@
 [ext_resource type="Texture2D" uid="uid://dyw8ed362ixg7" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-15.png" id="11_f15"]
 [ext_resource type="Texture2D" uid="uid://cxl03dcdvyp25" path="res://echoveil/forme/Foreme and fuse frames/094B4954-6DD8-4BF2-A8AD-73DCE0E8A4CB-16.png" id="12_f16"]
 
+; ── New directional walk sprites ──────────────────────────────────────────────
+[ext_resource type="Texture2D" path="res://echoveil/forme/new forme sprite/down left.png" id="13_wd_l"]
+[ext_resource type="Texture2D" path="res://echoveil/forme/new forme sprite/down right.png" id="14_wd_r"]
+[ext_resource type="Texture2D" path="res://echoveil/forme/new forme sprite/up left.png" id="15_wu_l"]
+[ext_resource type="Texture2D" path="res://echoveil/forme/new forme sprite/up right.png" id="16_wu_r"]
+[ext_resource type="Texture2D" path="res://echoveil/forme/new forme sprite/left left.png" id="17_wl_l"]
+[ext_resource type="Texture2D" path="res://echoveil/forme/new forme sprite/left right .png" id="18_wl_r"]
+[ext_resource type="Texture2D" path="res://echoveil/forme/new forme sprite/right left.png" id="19_wr_l"]
+[ext_resource type="Texture2D" path="res://echoveil/forme/new forme sprite/right right .png" id="20_wr_r"]
+
 [sub_resource type="AtlasTexture" id="AT_idle0"]
 atlas = ExtResource("11_f15")
 region = Rect2(416, 112, 220, 210)
@@ -65,14 +75,11 @@ region = Rect2(617, 112, 220, 210)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AT_idle0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AT_idle1")
+"texture": ExtResource("14_wd_r")
 }],
 "loop": true,
 "name": &"idle",
-"speed": 4.0
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -113,4 +120,48 @@ animations = [{
 "loop": false,
 "name": &"swing",
 "speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_wd_l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_wd_r")
+}],
+"loop": true,
+"name": &"walk_down",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15_wu_l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_wu_r")
+}],
+"loop": true,
+"name": &"walk_up",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_wl_l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_wl_r")
+}],
+"loop": true,
+"name": &"walk_left",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("19_wr_l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_wr_r")
+}],
+"loop": true,
+"name": &"walk_right",
+"speed": 6.0
 }]

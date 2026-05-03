@@ -1,53 +1,34 @@
 [gd_scene format=3 uid="uid://c5g0sg05pbfyc"]
 
 [ext_resource type="Script" uid="uid://2amuy46p2t3q" path="res://player.gd" id="1_player"]
-[ext_resource type="Texture2D" uid="uid://c2j7t6f25unu6" path="res://echoveil/platforms/ground_stone 2.PNG" id="2_hx44q"]
 [ext_resource type="SpriteFrames" uid="uid://dgco3rqfqmgyb" path="res://player_frames.tres" id="2_pframes"]
 [ext_resource type="SpriteFrames" uid="uid://c7ronklbxhj4o" path="res://fuse_frames.tres" id="3_fframes"]
 [ext_resource type="Script" uid="uid://crdyrd1tl85hc" path="res://hud.gd" id="4_hud"]
-[ext_resource type="Texture2D" uid="uid://bx53b5qrbdjlv" path="res://echoveil/platforms/Ledge long.png" id="5_3l65w"]
 [ext_resource type="PackedScene" path="res://drone.tscn" id="5_drone"]
 [ext_resource type="PackedScene" path="res://shard.tscn" id="6_shard"]
 [ext_resource type="AudioStream" uid="uid://dlwq17pgqpsr" path="res://echoveil/music/Mist in the Circuit-2.mp3" id="8_music"]
 [ext_resource type="Texture2D" uid="uid://f0lwj0rbq0qt" path="res://echoveil/UI/mourk counter/220E297F-BA40-4195-9E91-D295DD553BA9-2.png" id="9_mc"]
 [ext_resource type="Texture2D" uid="uid://5h85q5nijjse" path="res://echoveil/UI/Life shards/220E297F-BA40-4195-9E91-D295DD553BA9-1.png" id="10_ls"]
 [ext_resource type="PackedScene" path="res://touch_controls.tscn" id="11_touch"]
-[ext_resource type="Texture2D" uid="uid://dsl4xo7l1hlh3" path="res://echoveil/platforms/Background_far layer.PNG" id="13_bg"]
-[ext_resource type="Texture2D" uid="uid://dfo6gvdmoemta" path="res://echoveil/platforms/Ledge two.png" id="17_ledge2"]
-[ext_resource type="Texture2D" uid="uid://dggeirass816s" path="res://echoveil/platforms/Ledge three.png" id="18_ledge3"]
-[ext_resource type="Texture2D" uid="uid://btmstgmf1oads" path="res://echoveil/platforms/Ledge.png" id="19_ledge1"]
 [ext_resource type="PackedScene" path="res://rock.tscn" id="20_rock"]
 [ext_resource type="PackedScene" path="res://level_exit.tscn" id="21_exit"]
 [ext_resource type="PackedScene" path="res://curation_guard.tscn" id="22_guard"]
-[ext_resource type="PackedScene" path="res://canvas_suppressor.tscn" id="23_sup"]
-[ext_resource type="PackedScene" path="res://ability_orb.tscn" id="24_orb"]
+[ext_resource type="Script" path="res://room_visual.gd" id="30_rv"]
 
-[sub_resource type="RectangleShape2D" id="s_ground"]
-size = Vector2(5000, 32)
+[sub_resource type="RectangleShape2D" id="s_wall_h"]
+size = Vector2(1920, 48)
 
-[sub_resource type="RectangleShape2D" id="s_wall_l"]
-size = Vector2(20, 800)
-
-[sub_resource type="RectangleShape2D" id="s_wall_r"]
-size = Vector2(20, 800)
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_nauge"]
-load_path = "res://.godot/imported/Fog layer.PNG-ee5e69753990b55c9f29c26b2c56bfe7.ctex"
-
-[sub_resource type="RectangleShape2D" id="s_plat1"]
-size = Vector2(191, 20)
-
-[sub_resource type="RectangleShape2D" id="s_plat2"]
-size = Vector2(200, 20)
-
-[sub_resource type="RectangleShape2D" id="s_plat3"]
-size = Vector2(160, 20)
-
-[sub_resource type="RectangleShape2D" id="s_plat4"]
-size = Vector2(200, 20)
+[sub_resource type="RectangleShape2D" id="s_wall_v"]
+size = Vector2(48, 1080)
 
 [sub_resource type="RectangleShape2D" id="s_player"]
-size = Vector2(114, 105)
+size = Vector2(60, 60)
+
+; Snake-maze baffles — four vertical walls alternating top/bottom attachment.
+; Each 640 px tall, leaving a 344 px gap on the open end (comfortable for L1).
+; V1, V3 hang from the top wall; V2, V4 rise from the bottom wall.
+[sub_resource type="RectangleShape2D" id="s_baffle"]
+size = Vector2(30, 640)
 
 [sub_resource type="AtlasTexture" id="at_mc"]
 atlas = ExtResource("9_mc")
@@ -57,360 +38,199 @@ region = Rect2(120, 399, 697, 229)
 atlas = ExtResource("10_ls")
 region = Rect2(913, 413, 119, 230)
 
-[node name="Level1" type="Node2D" unique_id=450925954]
+[node name="Level1" type="Node2D"]
 
-[node name="Background" type="CanvasLayer" parent="." unique_id=111000001]
+; ── Background ────────────────────────────────────────────────────────────────
+[node name="Background" type="CanvasLayer" parent="."]
 layer = -10
 
-[node name="FarLayer" type="TextureRect" parent="Background" unique_id=111000002]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -11.0
-offset_top = 1.0
-offset_right = 869.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("13_bg")
-expand_mode = 1
-stretch_mode = 1
+[node name="RoomFloor" type="ColorRect" parent="Background"]
+color = Color(0, 0, 0, 1)
+offset_right = 1920.0
+offset_bottom = 1080.0
 
-[node name="Music" type="AudioStreamPlayer" parent="." unique_id=413034785]
+; Verge Entry Chamber — teal-slate stone
+[node name="RoomVisual" type="Node2D" parent="Background"]
+script = ExtResource("30_rv")
+floor_color = Color(0.07, 0.11, 0.17, 1.0)
+wall_color = Color(0.12, 0.20, 0.30, 1.0)
+crystal_hue = 0.52
+show_entry_arch = true
+show_exit_glow = true
+
+; ── Music ─────────────────────────────────────────────────────────────────────
+[node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_music")
 volume_db = -12.0
 autoplay = true
 
-[node name="Ground" type="StaticBody2D" parent="." unique_id=537072509]
-position = Vector2(1000, 668)
+; ── Room boundary walls ────────────────────────────────────────────────────────
+[node name="WallTop" type="StaticBody2D" parent="."]
+position = Vector2(960, 24)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=2065281455]
-shape = SubResource("s_ground")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallTop"]
+shape = SubResource("s_wall_h")
 
-[node name="GroundTex" type="TextureRect" parent="Ground" unique_id=350820970]
-offset_left = -1020.0
-offset_top = -187.0
-offset_right = 2520.0
-offset_bottom = 386.0
-texture = ExtResource("2_hx44q")
-expand_mode = 1
+[node name="WallBottom" type="StaticBody2D" parent="."]
+position = Vector2(960, 1056)
 
-[node name="WallLeft" type="StaticBody2D" parent="." unique_id=648516044]
-position = Vector2(-10, 300)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallBottom"]
+shape = SubResource("s_wall_h")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WallLeft" unique_id=1056582615]
-shape = SubResource("s_wall_l")
+[node name="WallLeft" type="StaticBody2D" parent="."]
+position = Vector2(24, 540)
 
-[node name="WallRight" type="StaticBody2D" parent="." unique_id=1764625809]
-position = Vector2(3510, 300)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallLeft"]
+shape = SubResource("s_wall_v")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight" unique_id=368816069]
-shape = SubResource("s_wall_r")
+[node name="WallRight" type="StaticBody2D" parent="."]
+position = Vector2(1896, 540)
 
-[node name="Fog" type="Sprite2D" parent="." unique_id=555000001]
-modulate = Color(1, 1, 1, 0.72)
-z_index = 1
-position = Vector2(1000, 270.93)
-scale = Vector2(0.518, 1.1165401)
-texture = SubResource("CompressedTexture2D_nauge")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
+shape = SubResource("s_wall_v")
 
-[node name="Platform1" type="StaticBody2D" parent="." unique_id=1654967156]
-position = Vector2(400, 520)
+; ── Maze baffles ──────────────────────────────────────────────────────────────
+; Path: start(180,540) → south past y=688 → cross V1 → north past y=392 →
+;       cross V2 → south past y=688 → cross V3 → north past y=392 →
+;       cross V4 → south to y=540 → exit(1860,540)
+;
+; BaffleV1 top : x=500, y=48→688  — gap y=688–1032 (344 px, south passage)
+; BaffleV2 bot : x=800, y=392→1032 — gap y=48–392  (344 px, north passage)
+; BaffleV3 top : x=1100, y=48→688  — gap y=688–1032 (south passage)
+; BaffleV4 bot : x=1400, y=392→1032 — gap y=48–392  (north passage)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform1" unique_id=580620553]
-position = Vector2(-4.5, 0)
-shape = SubResource("s_plat1")
+[node name="BaffleV1" type="StaticBody2D" parent="."]
+position = Vector2(500, 368)
 
-[node name="LedgeTex" type="Sprite2D" parent="Platform1" unique_id=878719617]
-position = Vector2(122.00003, -9)
-scale = Vector2(0.3296484, 0.26)
-texture = ExtResource("5_3l65w")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BaffleV1"]
+shape = SubResource("s_baffle")
 
-[node name="Platform2" type="StaticBody2D" parent="." unique_id=689530374]
-position = Vector2(700, 420)
+[node name="Visual" type="ColorRect" parent="BaffleV1"]
+color = Color(0.16, 0.26, 0.36, 1.0)
+offset_left = -15.0
+offset_top = -320.0
+offset_right = 15.0
+offset_bottom = 320.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2" unique_id=1235542999]
-shape = SubResource("s_plat2")
+[node name="BaffleV2" type="StaticBody2D" parent="."]
+position = Vector2(800, 712)
 
-[node name="LedgeTex" type="Sprite2D" parent="Platform2" unique_id=1057959165]
-position = Vector2(133.15997, -9)
-scale = Vector2(0.33442703, 0.26)
-texture = ExtResource("5_3l65w")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BaffleV2"]
+shape = SubResource("s_baffle")
 
-[node name="Platform3" type="StaticBody2D" parent="." unique_id=2100985263]
-position = Vector2(1000, 340)
+[node name="Visual" type="ColorRect" parent="BaffleV2"]
+color = Color(0.16, 0.26, 0.36, 1.0)
+offset_left = -15.0
+offset_top = -320.0
+offset_right = 15.0
+offset_bottom = 320.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3" unique_id=829735404]
-shape = SubResource("s_plat3")
+[node name="BaffleV3" type="StaticBody2D" parent="."]
+position = Vector2(1100, 368)
 
-[node name="LedgeTex" type="Sprite2D" parent="Platform3" unique_id=1672591674]
-position = Vector2(-147, -39)
-scale = Vector2(0.3296484, 0.26)
-texture = ExtResource("17_ledge2")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BaffleV3"]
+shape = SubResource("s_baffle")
 
-[node name="Platform4" type="StaticBody2D" parent="." unique_id=1393546088]
-position = Vector2(1300, 460)
+[node name="Visual" type="ColorRect" parent="BaffleV3"]
+color = Color(0.16, 0.26, 0.36, 1.0)
+offset_left = -15.0
+offset_top = -320.0
+offset_right = 15.0
+offset_bottom = 320.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform4" unique_id=1143614657]
-shape = SubResource("s_plat4")
+[node name="BaffleV4" type="StaticBody2D" parent="."]
+position = Vector2(1400, 712)
 
-[node name="LedgeTex" type="Sprite2D" parent="Platform4" unique_id=1784020651]
-position = Vector2(-253.99994, 41.000008)
-scale = Vector2(0.50143886, 0.32999998)
-texture = ExtResource("18_ledge3")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BaffleV4"]
+shape = SubResource("s_baffle")
 
-[node name="Platform5" type="StaticBody2D" parent="." unique_id=845778228]
-position = Vector2(1650, 380)
+[node name="Visual" type="ColorRect" parent="BaffleV4"]
+color = Color(0.16, 0.26, 0.36, 1.0)
+offset_left = -15.0
+offset_top = -320.0
+offset_right = 15.0
+offset_bottom = 320.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform5" unique_id=45650536]
-shape = SubResource("s_plat1")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform5" unique_id=322435908]
-position = Vector2(342.45752, 92)
-scale = Vector2(0.5801335, 0.33461532)
-texture = ExtResource("19_ledge1")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Player" type="CharacterBody2D" parent="." unique_id=470107600 groups=["player"]]
-position = Vector2(180, 580)
+; ── Player ────────────────────────────────────────────────────────────────────
+[node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
+position = Vector2(180, 540)
 script = ExtResource("1_player")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player" unique_id=330240546]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player"]
 position = Vector2(-61, 16)
-scale = Vector2(0.52, 0.52)
+scale = Vector2(0.60, 0.60)
 sprite_frames = ExtResource("2_pframes")
 animation = &"idle"
 autoplay = "idle"
 
-[node name="FuseSprite" type="AnimatedSprite2D" parent="Player" unique_id=2037091400]
-position = Vector2(-20.000006, -184)
+[node name="FuseSprite" type="AnimatedSprite2D" parent="Player"]
+position = Vector2(-20.0, -80.0)
 scale = Vector2(0.36, 0.36)
 sprite_frames = ExtResource("3_fframes")
 animation = &"blank"
 autoplay = "blank"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=344234082]
-position = Vector2(-62, 22.5)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(-62, 10)
 shape = SubResource("s_player")
 
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=942498202]
-position = Vector2(0, -80)
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position = Vector2(0, 0)
 limit_left = 0
-limit_top = -200
-limit_right = 3500
-limit_bottom = 700
-drag_horizontal_enabled = true
-drag_vertical_enabled = true
-drag_left_margin = 0.35
-drag_top_margin = 0.25
-drag_right_margin = 0.35
-drag_bottom_margin = 0.25
+limit_top = 0
+limit_right = 1920
+limit_bottom = 1080
 
-[node name="Drone1" parent="." unique_id=44708029 instance=ExtResource("5_drone")]
-position = Vector2(900, 560)
+; ── Enemies — patrol the maze passages ────────────────────────────────────────
+; Drone1 lurks in BaffleV1's south gap, Drone2 in BaffleV2's north gap.
+; Guard1 sits in the middle section (between V2 and V3) to punish rushing.
 
+[node name="Drone1" parent="." instance=ExtResource("5_drone")]
+position = Vector2(500, 860)
 
-[node name="Shard4" parent="." unique_id=492942105 instance=ExtResource("6_shard")]
-position = Vector2(701, 398)
+[node name="Drone2" parent="." instance=ExtResource("5_drone")]
+position = Vector2(800, 200)
 
-[node name="Shard5" parent="." unique_id=2119158844 instance=ExtResource("6_shard")]
-position = Vector2(760, 395)
-shard_type = 2
-
-[node name="Shard6" parent="." unique_id=1479138252 instance=ExtResource("6_shard")]
-position = Vector2(981, 317)
-
-[node name="Shard7" parent="." unique_id=2056878147 instance=ExtResource("6_shard")]
-position = Vector2(1255, 439)
-shard_type = 3
-
-[node name="Shard8" parent="." unique_id=193639214 instance=ExtResource("6_shard")]
-position = Vector2(1650, 348)
-shard_type = 4
-
-[node name="Rock1" parent="." unique_id=50156717 instance=ExtResource("20_rock")]
-position = Vector2(580, 610)
-hidden_shard = 0
-
-[node name="Rock2" parent="." unique_id=1834860937 instance=ExtResource("20_rock")]
-position = Vector2(780, 610)
-
-[node name="Rock3" parent="." unique_id=1360775910 instance=ExtResource("20_rock")]
-position = Vector2(430, 470)
-hidden_shard = 1
-
-[node name="Rock4" parent="." unique_id=1259694235 instance=ExtResource("20_rock")]
-position = Vector2(1150, 610)
-
-[node name="Guard1" parent="." unique_id=2201000001 instance=ExtResource("22_guard")]
-position = Vector2(640, 652)
-
-[node name="Guard2" parent="." unique_id=2201000002 instance=ExtResource("22_guard")]
-position = Vector2(1100, 652)
-drop_color = 1
-
-[node name="Suppressor1" parent="." unique_id=2301000001 instance=ExtResource("23_sup")]
-position = Vector2(980, 200)
-
-[node name="Platform6" type="StaticBody2D" parent="." unique_id=2401000010]
-position = Vector2(1880, 540)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform6" unique_id=2401000011]
-shape = SubResource("s_plat2")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform6" unique_id=2401000012]
-position = Vector2(133.15997, -9)
-scale = Vector2(0.33442703, 0.26)
-texture = ExtResource("5_3l65w")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform7" type="StaticBody2D" parent="." unique_id=2401000020]
-position = Vector2(2060, 400)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform7" unique_id=2401000021]
-shape = SubResource("s_plat3")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform7" unique_id=2401000022]
-position = Vector2(-147, -39)
-scale = Vector2(0.3296484, 0.26)
-texture = ExtResource("17_ledge2")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform8" type="StaticBody2D" parent="." unique_id=2401000030]
-position = Vector2(2230, 250)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform8" unique_id=2401000031]
-shape = SubResource("s_plat1")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform8" unique_id=2401000032]
-position = Vector2(122.00003, -9)
-scale = Vector2(0.3296484, 0.26)
-texture = ExtResource("5_3l65w")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform9" type="StaticBody2D" parent="." unique_id=2401000040]
-position = Vector2(2490, 530)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform9" unique_id=2401000041]
-shape = SubResource("s_plat4")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform9" unique_id=2401000042]
-position = Vector2(-253.99994, 41.000008)
-scale = Vector2(0.50143886, 0.32999998)
-texture = ExtResource("18_ledge3")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform10" type="StaticBody2D" parent="." unique_id=2401000050]
-position = Vector2(2680, 340)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform10" unique_id=2401000051]
-shape = SubResource("s_plat2")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform10" unique_id=2401000052]
-position = Vector2(133.15997, -9)
-scale = Vector2(0.33442703, 0.26)
-texture = ExtResource("5_3l65w")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform11" type="StaticBody2D" parent="." unique_id=2401000060]
-position = Vector2(2860, 205)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform11" unique_id=2401000061]
-shape = SubResource("s_plat1")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform11" unique_id=2401000062]
-position = Vector2(342.45752, 92)
-scale = Vector2(0.5801335, 0.33461532)
-texture = ExtResource("19_ledge1")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform12" type="StaticBody2D" parent="." unique_id=2501000010]
-position = Vector2(3060, 450)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform12" unique_id=2501000011]
-shape = SubResource("s_plat2")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform12" unique_id=2501000012]
-position = Vector2(133.15997, -9)
-scale = Vector2(0.33442703, 0.26)
-texture = ExtResource("5_3l65w")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Platform13" type="StaticBody2D" parent="." unique_id=2501000020]
-position = Vector2(3260, 310)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform13" unique_id=2501000021]
-shape = SubResource("s_plat3")
-
-[node name="LedgeTex" type="Sprite2D" parent="Platform13" unique_id=2501000022]
-position = Vector2(-147, -39)
-scale = Vector2(0.3296484, 0.26)
-texture = ExtResource("17_ledge2")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 650)
-
-[node name="Rock5" parent="." unique_id=2401000070 instance=ExtResource("20_rock")]
-position = Vector2(1930, 610)
-hidden_shard = 2
-
-[node name="Rock6" parent="." unique_id=2401000071 instance=ExtResource("20_rock")]
-position = Vector2(2630, 610)
-
-[node name="Rock7" parent="." unique_id=2401000072 instance=ExtResource("20_rock")]
-position = Vector2(3060, 610)
-hidden_shard = 3
-
-[node name="Guard3" parent="." unique_id=2401000080 instance=ExtResource("22_guard")]
-position = Vector2(2060, 652)
+[node name="Guard1" parent="." instance=ExtResource("22_guard")]
+position = Vector2(940, 540)
 drop_color = 0
 
-[node name="Guard4" parent="." unique_id=2401000081 instance=ExtResource("22_guard")]
-position = Vector2(2760, 652)
-drop_color = 2
+; ── Shards ────────────────────────────────────────────────────────────────────
+[node name="Shard1" parent="." instance=ExtResource("6_shard")]
+position = Vector2(300, 200)
 
-[node name="Suppressor2" parent="." unique_id=2401000090 instance=ExtResource("23_sup")]
-position = Vector2(2420, 195)
+[node name="Shard2" parent="." instance=ExtResource("6_shard")]
+position = Vector2(300, 860)
 
-[node name="Shard9" parent="." unique_id=2401000100 instance=ExtResource("6_shard")]
-position = Vector2(1880, 518)
+[node name="Shard3" parent="." instance=ExtResource("6_shard")]
+position = Vector2(650, 200)
 
-[node name="Shard10" parent="." unique_id=2401000101 instance=ExtResource("6_shard")]
-position = Vector2(2230, 228)
-shard_type = 2
+[node name="Shard4" parent="." instance=ExtResource("6_shard")]
+position = Vector2(950, 860)
 
-[node name="Shard11" parent="." unique_id=2401000102 instance=ExtResource("6_shard")]
-position = Vector2(2860, 182)
+[node name="Shard5" parent="." instance=ExtResource("6_shard")]
+position = Vector2(1560, 540)
 
-[node name="Shard12" parent="." unique_id=2401000103 instance=ExtResource("6_shard")]
-position = Vector2(3260, 288)
-shard_type = 3
+; ── Rocks (Rock2 hides Prime Mourk) ──────────────────────────────────────────
+[node name="Rock1" parent="." instance=ExtResource("20_rock")]
+position = Vector2(460, 840)
 
-[node name="AbilityOrb1" parent="." unique_id=2401000110 instance=ExtResource("24_orb")]
-position = Vector2(2680, 308)
+[node name="Rock2" parent="." instance=ExtResource("20_rock")]
+position = Vector2(940, 840)
+hidden_shard = 3
 
-[node name="LevelExit" parent="." unique_id=1867320001 instance=ExtResource("21_exit")]
-position = Vector2(3455, 552)
+[node name="Rock3" parent="." instance=ExtResource("20_rock")]
+position = Vector2(1420, 840)
 
-[node name="HUD" type="CanvasLayer" parent="." unique_id=458924752]
+; ── Level exit ────────────────────────────────────────────────────────────────
+[node name="LevelExit" parent="." instance=ExtResource("21_exit")]
+position = Vector2(1860, 540)
+
+; ── HUD ───────────────────────────────────────────────────────────────────────
+[node name="HUD" type="CanvasLayer" parent="."]
 script = ExtResource("4_hud")
 
-[node name="ShardIcon" type="TextureRect" parent="HUD" unique_id=718245162]
+[node name="ShardIcon" type="TextureRect" parent="HUD"]
 offset_left = 10.0
 offset_top = 8.0
 offset_right = 254.0
@@ -419,7 +239,7 @@ texture = SubResource("at_mc")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="ShardLabel" type="Label" parent="HUD" unique_id=277226546]
+[node name="ShardLabel" type="Label" parent="HUD"]
 offset_left = 120.0
 offset_top = 22.0
 offset_right = 248.0
@@ -428,7 +248,7 @@ theme_override_colors/font_color = Color(0.9098039, 0.7882353, 0.3019608, 1)
 theme_override_font_sizes/font_size = 41
 text = "x 0"
 
-[node name="HealthShard1" type="TextureRect" parent="HUD" unique_id=201043831]
+[node name="HealthShard1" type="TextureRect" parent="HUD"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -441,7 +261,7 @@ texture = SubResource("at_ls")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="HealthShard2" type="TextureRect" parent="HUD" unique_id=416146588]
+[node name="HealthShard2" type="TextureRect" parent="HUD"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -454,7 +274,7 @@ texture = SubResource("at_ls")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="HealthShard3" type="TextureRect" parent="HUD" unique_id=1258567500]
+[node name="HealthShard3" type="TextureRect" parent="HUD"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -467,17 +287,18 @@ texture = SubResource("at_ls")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="LivesLabel" type="Label" parent="HUD" unique_id=608024782]
+[node name="LivesLabel" type="Label" parent="HUD"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -120.0
+offset_left = -130.0
 offset_top = 65.0
 offset_right = -10.0
-offset_bottom = 92.0
+offset_bottom = 94.0
 grow_horizontal = 0
-theme_override_colors/font_color = Color(0.9, 0.3, 1, 1)
-theme_override_font_sizes/font_size = 37
+theme_override_colors/font_color = Color(0.15, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
+text = "LV  1"
 
-[node name="TouchControls" parent="." unique_id=1419975432 instance=ExtResource("11_touch")]
+[node name="TouchControls" parent="." instance=ExtResource("11_touch")]
