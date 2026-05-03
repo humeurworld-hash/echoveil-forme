@@ -73,16 +73,16 @@ func _ready() -> void:
 
 	# ── 2. Comic panels — scroll opposite to text (drift DOWN) ────────────────
 	for i in range(PANEL_PATHS.size()):
-		var tr := TextureRect.new()
+		var panel := TextureRect.new()
 		if ResourceLoader.exists(PANEL_PATHS[i]):
-			tr.texture = load(PANEL_PATHS[i])
-		tr.expand_mode   = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
-		tr.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+			panel.texture = load(PANEL_PATHS[i])
+		panel.expand_mode   = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+		panel.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		# Make the rect taller than viewport so the downward pan doesn't show a gap
-		tr.size          = Vector2(vp.x, vp.y + PAN_AMOUNT)
-		tr.position      = Vector2(0.0, -PAN_AMOUNT)   # start panned up
-		tr.modulate.a    = 1.0 if i == 0 else 0.0
-		add_child(tr)
+		panel.size          = Vector2(vp.x, vp.y + PAN_AMOUNT)
+		panel.position      = Vector2(0.0, -PAN_AMOUNT)   # start panned up
+		panel.modulate.a    = 1.0 if i == 0 else 0.0
+		add_child(panel)
 
 		var t_start := float(i) * per
 		var t_end   := t_start + per
@@ -91,20 +91,20 @@ func _ready() -> void:
 		if i > 0:
 			var fade_in := create_tween()
 			fade_in.tween_interval(t_start - CROSSFADE_TIME)
-			fade_in.tween_property(tr, "modulate:a", 1.0, CROSSFADE_TIME) \
+			fade_in.tween_property(panel, "modulate:a", 1.0, CROSSFADE_TIME) \
 				.set_trans(Tween.TRANS_SINE)
 
 		# Crossfade out (skip for last panel — TransitionLayer handles final fade)
 		if i < PANEL_PATHS.size() - 1:
 			var fade_out := create_tween()
 			fade_out.tween_interval(t_end)
-			fade_out.tween_property(tr, "modulate:a", 0.0, CROSSFADE_TIME) \
+			fade_out.tween_property(panel, "modulate:a", 0.0, CROSSFADE_TIME) \
 				.set_trans(Tween.TRANS_SINE)
 
 		# Downward parallax pan  (-PAN_AMOUNT → 0 over each panel's slot)
 		var pan := create_tween()
 		pan.tween_interval(t_start)
-		pan.tween_property(tr, "position:y", 0.0, per) \
+		pan.tween_property(panel, "position:y", 0.0, per) \
 			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 	# ── 3. Dark scrim — keeps text legible over bright art ────────────────────

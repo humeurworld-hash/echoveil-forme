@@ -17,7 +17,7 @@ func _apply_gem_glow() -> void:
 		Color(0.55, 1.10, 1.05),  # TEAL
 		Color(0.55, 1.15, 0.65),  # GREEN
 		Color(1.15, 0.80, 0.45),  # ORANGE
-		Color(0.95, 0.60, 1.20),  # PURPLE
+		Color(1.30, 0.15, 1.50),  # PURPLE — Prime Mourk: vivid magenta, unmissably distinct
 		Color(1.20, 1.10, 0.40),  # GOLD
 	]
 	var spr: Node = get_node_or_null("Sprite2D")
@@ -65,10 +65,10 @@ func spawn_shards() -> void:
 	# ── Gem drop ──────────────────────────────────────────────────────────────
 	if hidden_shard >= 0:
 		const GEM_COLORS := [
-			Color(0.30, 0.90, 0.85),  # TEAL
-			Color(0.40, 1.00, 0.55),  # GREEN
+			Color(0.15, 0.90, 0.92),  # TEAL
+			Color(0.35, 0.95, 0.50),  # GREEN
 			Color(1.00, 0.60, 0.15),  # ORANGE
-			Color(0.80, 0.35, 1.00),  # PURPLE
+			Color(0.92, 0.12, 1.00),  # PURPLE — Prime Mourk vivid magenta
 			Color(1.00, 0.85, 0.15),  # GOLD
 		]
 		# Gem sparkle burst in the gem's color

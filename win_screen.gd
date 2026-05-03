@@ -3,31 +3,36 @@ extends Control
 func _ready() -> void:
 	clip_contents = true
 
-	# ── Background ───────────────────────────────────────────────────────────
+	# ── Background ────────────────────────────────────────────────────────────
 	var bg := ColorRect.new()
 	bg.color = Color(0.0, 0.0, 0.0, 1.0)
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 
-	# ── Centred layout ────────────────────────────────────────────────────────
+	# ── Centred layout ─────────────────────────────────────────────────────────
 	var vbox := VBoxContainer.new()
 	vbox.set_anchors_preset(Control.PRESET_CENTER)
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	vbox.custom_minimum_size = Vector2(680, 0)
+	vbox.custom_minimum_size = Vector2(700, 0)
 	vbox.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	vbox.grow_vertical   = Control.GROW_DIRECTION_BOTH
 	add_child(vbox)
 
+	var total_xp := GameState.xp + (GameState.player_level - 1) * 50
+
 	var lines := [
-		["YOU ESCAPED THE VERGE",          72, Color(0.91, 0.79, 0.30, 1.0)],
-		["",                                22, Color(0, 0, 0, 0)],
-		["The Canvas lost its signal.",     34, Color(0.72, 0.62, 0.90, 1.0)],
-		["Forme carries the Prime Mourk.", 34, Color(0.72, 0.62, 0.90, 1.0)],
-		["",                                22, Color(0, 0, 0, 0)],
-		["For now — he is free.",           34, Color(0.55, 0.88, 0.72, 1.0)],
+		["THE RIFT IS SEALED",                              72, Color(0.91, 0.79, 0.30, 1.0)],
+		["",                                                22, Color(0, 0, 0, 0)],
+		["Forme carried the Prime Mourk out.",              34, Color(0.72, 0.62, 0.90, 1.0)],
+		["The Echoveil cannot follow.",                     34, Color(0.72, 0.62, 0.90, 1.0)],
+		["",                                                22, Color(0, 0, 0, 0)],
+		["The signal is lost — for now.",                   34, Color(0.55, 0.88, 0.72, 1.0)],
+		["",                                                16, Color(0, 0, 0, 0)],
+		["Level %d  ·  %d XP" % [GameState.player_level, total_xp],
+		                                                    28, Color(0.45, 0.92, 0.88, 1.0)],
 	]
 
-	var labels: Array[Label] = []
+	var labels : Array[Label] = []
 	for row in lines:
 		var lbl := Label.new()
 		lbl.text          = row[0]
@@ -54,7 +59,6 @@ func _ready() -> void:
 
 	TransitionLayer.fade_in(1.2)
 
-	# Stagger reveal
 	await get_tree().create_timer(0.8).timeout
 	var seq := create_tween()
 	seq.tween_property(labels[0], "modulate:a", 1.0, 0.7)
@@ -66,8 +70,7 @@ func _ready() -> void:
 	seq.tween_property(btn, "modulate:a", 1.0, 0.55)
 
 func _return() -> void:
-	# Reset progress so the player starts fresh
-	GameState.current_level = 1
+	GameState.current_level    = 1
 	LevelManager.current_level = 1
 	GameState.save()
 	TransitionLayer.fade_out(
@@ -76,5 +79,5 @@ func _return() -> void:
 	)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey        and event.pressed and not event.echo: _return()
-	elif event is InputEventScreenTouch and event.pressed:                 _return()
+	if event is InputEventKey          and event.pressed and not event.echo: _return()
+	elif event is InputEventScreenTouch and event.pressed:                   _return()

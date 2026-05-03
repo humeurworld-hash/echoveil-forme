@@ -5,10 +5,15 @@ enum ShardType { TEAL, GREEN, ORANGE, PURPLE, GOLD }
 @export var shard_type: ShardType = ShardType.TEAL
 
 const SHARD_DATA := {
-	ShardType.TEAL:   {"tint": Color(0.30, 0.90, 0.85, 1.0), "tex": "res://echoveil/shards/shard_teal.png"},
-	ShardType.GREEN:  {"tint": Color(0.40, 1.00, 0.55, 1.0), "tex": "res://echoveil/shards/shard_green.png"},
+	# TEAL  — Verge realm shard (most common, standard world drop, shard count only)
+	ShardType.TEAL:   {"tint": Color(0.15, 0.90, 0.92, 1.0), "tex": "res://echoveil/shards/shard_teal.png"},
+	# GREEN — speed power-up (NOT health — health is reserved for Prime Mourk)
+	ShardType.GREEN:  {"tint": Color(0.35, 0.95, 0.50, 1.0), "tex": "res://echoveil/shards/shard_green.png"},
+	# ORANGE — longer speed burst
 	ShardType.ORANGE: {"tint": Color(1.00, 0.60, 0.15, 1.0), "tex": "res://echoveil/shards/shard_orange.png"},
-	ShardType.PURPLE: {"tint": Color(0.80, 0.35, 1.00, 1.0), "tex": "res://echoveil/shards/shard_purple.png"},
+	# PURPLE — Prime Mourk shard (rare, hidden only inside breakable rocks)
+	ShardType.PURPLE: {"tint": Color(0.92, 0.12, 1.00, 1.0), "tex": "res://echoveil/shards/shard_purple.png"},
+	# GOLD   — full heal + shield
 	ShardType.GOLD:   {"tint": Color(1.00, 0.85, 0.15, 1.0), "tex": "res://echoveil/shards/shard_gold.png"},
 }
 
@@ -83,14 +88,19 @@ func _collect(player: Node2D) -> void:
 		GameState.shards_collected += 1
 		match st:
 			ShardType.GREEN:
+				# Speed power-up — brief boost
+				if is_instance_valid(player) and player.has_method("boost_speed"):
+					player.boost_speed(2.5)
+			ShardType.ORANGE:
+				# Longer speed burst
+				if is_instance_valid(player) and player.has_method("boost_speed"):
+					player.boost_speed(4.0)
+			ShardType.PURPLE:
+				# Prime Mourk shard — rare, restores health + charges shield
 				if GameState.health < 3:
 					GameState.health = min(3, GameState.health + 1)
-			ShardType.ORANGE:
-				if is_instance_valid(player) and player.has_method("boost_speed"):
-					player.boost_speed(3.5)
-			ShardType.PURPLE:
 				if is_instance_valid(player) and player.has_method("add_shield_progress"):
-					player.add_shield_progress(3)
+					player.add_shield_progress(5)
 			ShardType.GOLD:
 				GameState.health = 3
 				if is_instance_valid(player) and player.has_method("force_shield"):
